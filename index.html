@@ -9,6 +9,8 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
 body{margin:0;font-family:system-ui,-apple-system,sans-serif}
 .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -22,12 +24,219 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .help-btn:hover{transform:scale(1.1)}
 .save-pulse{animation:spulse 1s ease}
 @keyframes spulse{0%{background-color:#ecfdf5}50%{background-color:#d1fae5}100%{background-color:transparent}}
+.qa-btn{position:fixed;bottom:24px;left:24px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#0d9488,#14b8a6);color:#fff;font-size:1.25rem;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 16px rgba(13,148,136,.4);border:none;z-index:40;transition:transform .15s}
+.qa-btn:hover{transform:scale(1.1)}
+.qa-overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:9998;opacity:0;pointer-events:none;transition:opacity .3s}
+.qa-overlay.open{opacity:1;pointer-events:all}
+.qa-panel{position:fixed;top:0;right:0;width:380px;max-width:100vw;height:100vh;background:#f8fafc;z-index:9999;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-4px 0 24px rgba(0,0,0,.12)}
+.qa-panel.open{transform:translateX(0)}
+.qa-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:linear-gradient(135deg,#1e293b,#334155);color:#fff;flex-shrink:0}
+.qa-hdr h2{font-size:1.1rem;font-weight:700;margin:0}
+.qa-x{background:rgba(255,255,255,.12);border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s}
+.qa-x:hover{background:rgba(255,255,255,.25)}
+.qa-body{flex:1;overflow-y:auto;padding:20px 22px 32px}
+.qa-sec{margin-bottom:20px}
+.qa-sec-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#94a3b8;margin-bottom:10px}
+.qa-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+.qa-stat{background:#fff;border-radius:10px;padding:12px 14px;box-shadow:0 1px 3px rgba(0,0,0,.06);text-align:center}
+.qa-stat .num{font-size:1.4rem;font-weight:700;line-height:1}.qa-stat .lbl{font-size:.68rem;color:#94a3b8;margin-top:2px}
+.qa-stat.green .num{color:#16a34a}.qa-stat.amber .num{color:#d97706}.qa-stat.red .num{color:#dc2626}.qa-stat.blue .num{color:#2563eb}
+.qa-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.qa-act{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .15s;font-size:.82rem;font-weight:500;color:#334155;text-align:left}
+.qa-act:hover{background:#f1f5f9;border-color:#cbd5e1;transform:translateY(-1px)}
+.qa-act .qa-icon{font-size:1.2rem;flex-shrink:0}
+.qa-nav{display:flex;flex-wrap:wrap;gap:6px}
+.qa-nav-btn{padding:6px 14px;border-radius:20px;border:1px solid #e2e8f0;background:#fff;font-size:.78rem;font-weight:500;color:#475569;cursor:pointer;transition:all .15s}
+.qa-nav-btn:hover{background:#1e293b;color:#fff;border-color:#1e293b}
+.qa-nav-btn.active{background:#1e293b;color:#fff;border-color:#1e293b}
+.qa-alert{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:.8rem;font-weight:500;margin-bottom:8px;cursor:pointer;transition:background .15s}
+.qa-alert:hover{filter:brightness(.97)}
+.qa-alert.warn{background:#fffbeb;border:1px solid #fde68a;color:#c2410c}
+.qa-alert.danger{background:#fef2f2;border:1px solid #fecaca;color:#991b1b}
+.qa-alert.ok{background:#ecfdf5;border:1px solid #a7f3d0;color:#166534}
+.qa-alert .qa-badge{margin-left:auto;background:rgba(0,0,0,.08);padding:1px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.srt-th{cursor:pointer;user-select:none;transition:color .15s}.srt-th:hover{color:#1e293b}
+.srt-ar{font-size:.6rem;margin-left:4px;opacity:.5}
+.srt-th.active .srt-ar{opacity:1;color:#4f46e5}
+@media(max-width:480px){.qa-panel{width:100vw}.qa-btn{bottom:18px;left:18px}}
+
+
+/* ── Dark Mode ── */
+.dark{color:#e2e8f0}
+.dark .text-slate-900{color:#f1f5f9!important}.dark .text-slate-700,.dark .text-slate-600{color:#e2e8f0!important}.dark .text-slate-500,.dark .text-slate-400{color:#94a3b8!important}
+.dark .text-gray-800,.dark .text-gray-700,.dark .text-gray-600{color:#e2e8f0!important}.dark .text-gray-500,.dark .text-gray-400{color:#94a3b8!important}
+.dark .text-blue-900,.dark .text-blue-800,.dark .text-blue-700{color:#93c5fd!important}
+.dark .text-indigo-800,.dark .text-indigo-700,.dark .text-indigo-600,.dark .text-indigo-500{color:#a5b4fc!important}
+.dark .text-emerald-900,.dark .text-emerald-800,.dark .text-emerald-700,.dark .text-emerald-600,.dark .text-emerald-500{color:#6ee7b7!important}
+.dark .text-amber-900,.dark .text-amber-800,.dark .text-amber-700,.dark .text-amber-600,.dark .text-amber-500{color:#fcd34d!important}
+.dark .text-red-900,.dark .text-red-800,.dark .text-red-700,.dark .text-red-600,.dark .text-red-500{color:#fca5a5!important}
+.dark .text-rose-900,.dark .text-rose-800,.dark .text-rose-700,.dark .text-rose-600,.dark .text-rose-500{color:#fda4af!important}
+.dark .text-orange-700{color:#fdba74!important}
+.dark h1,.dark h2,.dark h3,.dark h4{color:#f1f5f9!important}
+.dark .bg-white,.dark [class*="bg-white"]{background-color:#1e293b!important}
+.dark .bg-slate-50,.dark .bg-slate-100{background-color:#1e293b!important}
+.dark .bg-slate-200,.dark .bg-slate-300{background-color:#334155!important}
+.dark .bg-gradient-to-br{background:#0f172a!important}
+.dark .bg-amber-50{background-color:#2a2215!important}.dark .bg-amber-100{background-color:#362d1a!important}
+.dark .bg-blue-50,.dark .bg-blue-100{background-color:#172135!important}
+.dark .bg-emerald-50,.dark .bg-emerald-100{background-color:#15261f!important}
+.dark .bg-red-50,.dark .bg-red-100{background-color:#2a1617!important}
+.dark .bg-rose-50,.dark .bg-rose-100{background-color:#2a161c!important}
+.dark .bg-indigo-50{background-color:#1b1b35!important}
+.dark .bg-orange-100{background-color:#2a2015!important}
+.dark .border,.dark [class*="border-gray"],.dark [class*="border-slate"]{border-color:#334155!important}
+.dark [class*="border-amber"]{border-color:#524215!important}
+.dark [class*="border-blue"]{border-color:#1e3a5f!important}
+.dark [class*="border-emerald"]{border-color:#1a4035!important}
+.dark [class*="border-red"]{border-color:#5c2020!important}
+.dark [class*="border-rose"]{border-color:#5c2030!important}
+.dark [class*="border-indigo"]{border-color:#312e81!important}
+.dark [class*="border-orange"]{border-color:#5c3d15!important}
+.dark [class*="border-white"]{border-color:#475569!important}
+.dark input,.dark select,.dark textarea{background-color:#1e293b!important;color:#e2e8f0!important;border-color:#334155!important}
+.dark table thead{background-color:#334155!important}.dark table thead th{color:#e2e8f0!important}
+.dark table tbody tr{background-color:#1e293b!important}.dark table tbody tr:nth-child(even){background-color:#253349!important}
+.dark table tbody td{color:#cbd5e1!important}.dark table tbody tr:hover{background-color:#2d3c52!important}
+.dark dialog,.dark [class*="rounded-xl"][class*="shadow"],.dark [class*="rounded-2xl"][class*="shadow"],.dark [class*="rounded-3xl"][class*="shadow"]{background-color:#1e293b!important;color:#e2e8f0!important}
+.dark .shadow-sm,.dark .shadow-lg,.dark .shadow-xl{box-shadow:0 10px 25px rgba(0,0,0,.5)!important}
+.dark [class*="bg-emerald-100"][class*="text-emerald"]{color:#6ee7b7!important;background-color:#15261f!important}
+.dark [class*="bg-amber-100"][class*="text-amber"]{color:#fcd34d!important;background-color:#2a2215!important}
+.dark [class*="bg-rose-100"][class*="text-rose"]{color:#fda4af!important;background-color:#2a161c!important}
+.dark [class*="bg-red-100"][class*="text-red"]{color:#fca5a5!important;background-color:#2a1617!important}
+.dark [class*="bg-blue-100"][class*="text-blue"]{color:#93c5fd!important;background-color:#172135!important}
+.dark [class*="bg-orange-100"][class*="text-orange"]{color:#fdba74!important;background-color:#2a2015!important}
+.dark ::placeholder{color:#64748b!important}
+.dark pre{background-color:#0f172a!important;color:#cbd5e1!important;border-color:#334155!important}
+.dark .border-dashed{border-color:#475569!important}
+.dark .qa-panel{background:#1e293b!important}.dark .qa-body{background:#1e293b!important}
+.dark .qa-stat{background:#0f172a!important}
+.dark .qa-act{background:#0f172a!important;border-color:#334155!important;color:#e2e8f0!important}
+.dark .qa-act:hover{background:#253349!important}
+.dark .qa-nav-btn{background:#0f172a!important;border-color:#334155!important;color:#94a3b8!important}
+.dark .qa-nav-btn:hover,.dark .qa-nav-btn.active{background:#f1f5f9!important;color:#1e293b!important}
+.dark .qa-alert.warn{background:#2a2215!important;border-color:#524215!important;color:#fcd34d!important}
+.dark .qa-alert.danger{background:#2a1617!important;border-color:#5c2020!important;color:#fca5a5!important}
+.dark .qa-alert.ok{background:#15261f!important;border-color:#1a4035!important;color:#6ee7b7!important}
+.dark .qa-sec-title{color:#64748b!important}
+.dark .tour-fade{background:#1e293b!important}
+.dark .tour-fade .text-slate-700,.dark .tour-fade .text-slate-600{color:#cbd5e1!important}
+.dm-toggle{position:fixed;top:12px;right:16px;z-index:9999;padding:6px 14px;border-radius:9999px;border:1px solid #334155;font-size:13px;cursor:pointer;background:#1e293b;color:#e2e8f0;transition:background .2s}
+.dm-toggle:hover{background:#334155}
+
+/* ── Pagination ── */
+.pg-bar{display:flex;align-items:center;justify-content:center;gap:6px;margin:12px 0;flex-wrap:wrap}
+.pg-bar button{min-width:34px;height:34px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:13px;cursor:pointer;transition:all .15s}
+.pg-bar button:hover{background:#e2e8f0}.pg-bar button.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
+.pg-bar button:disabled{opacity:.4;cursor:not-allowed}
+.pg-bar select{height:34px;border-radius:8px;border:1px solid #cbd5e1;padding:0 8px;font-size:13px}
+.pg-bar .pg-info{font-size:12px;color:#64748b;margin:0 8px}
+mark.hl{background:#fde68a;color:#92400e;border-radius:2px;padding:0 1px}
+.dark .pg-bar button{background:#1e293b;color:#e2e8f0;border-color:#334155}.dark .pg-bar button:hover{background:#334155}
+.dark .pg-bar button.active{background:#6366f1;color:#fff;border-color:#6366f1}
+.dark .pg-bar select{background:#1e293b;color:#e2e8f0;border-color:#334155}.dark .pg-bar .pg-info{color:#94a3b8}
+.dark mark.hl{background:#854d0e;color:#fef3c7}
+
+/* ── Undo/Redo ── */
+.undo-bar{display:inline-flex;gap:4px;margin-left:8px}
+.undo-bar button{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:13px;cursor:pointer;transition:all .15s}
+.undo-bar button:hover:not(:disabled){background:#e2e8f0}.undo-bar button:disabled{opacity:.35;cursor:not-allowed}
+.undo-bar .undo-count{font-size:11px;background:#e2e8f0;color:#64748b;border-radius:9999px;padding:0 6px;min-width:18px;text-align:center}
+.dark .undo-bar button{background:#1e293b;color:#e2e8f0;border-color:#334155}.dark .undo-bar button:hover:not(:disabled){background:#334155}
+.dark .undo-bar .undo-count{background:#334155;color:#94a3b8}
+
+/* ── Auth ── */
+.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);padding:20px}
+.auth-card{background:#fff;border-radius:24px;padding:40px;width:420px;max-width:95vw;box-shadow:0 25px 50px rgba(0,0,0,.25)}
+.auth-card h1{font-size:28px;font-weight:700;color:#1e293b;margin-bottom:4px;text-align:center}
+.auth-card .auth-sub{text-align:center;color:#64748b;font-size:14px;margin-bottom:24px}
+.auth-card input{width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;margin-bottom:12px;transition:border .2s;box-sizing:border-box}
+.auth-card input:focus{outline:none;border-color:#4f46e5}
+.auth-card .auth-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s;margin-top:4px}
+.auth-card .auth-btn:hover{opacity:.9}
+.auth-card .auth-toggle{text-align:center;margin-top:16px;font-size:13px;color:#64748b}
+.auth-card .auth-toggle button{background:none;border:none;color:#4f46e5;font-weight:600;cursor:pointer;text-decoration:underline}
+.auth-card .auth-err{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:12px}
+.auth-card .auth-msg{background:#ecfdf5;border:1px solid #a7f3d0;color:#059669;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:12px}
+.sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.sync-dot.ok{background:#22c55e}.sync-dot.busy{background:#f59e0b;animation:spulse 1s infinite}
+
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 const {useState,useMemo,useRef,useEffect,useCallback}=React;
+const SUPA_URL="https://hlceoxvmgeymdmprrobx.supabase.co";
+const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsY2VveHZtZ2V5bWRtcHJyb2J4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTE0NzYsImV4cCI6MjA5NjU4NzQ3Nn0.zc1h0-AoFt89S-gbVxda5QcDnR-eoH7GgZ1glzCsaKQ";
+const supa=window.supabase.createClient(SUPA_URL,SUPA_KEY);
+emailjs.init("JQVKZHu7BEcEBEQdF");
+
+async function cloudSaveItems(userId,items){
+  if(!userId||!items.length)return;
+  const rows=items.map(it=>({id:it.id,user_id:userId,item_name:it.itemName,item_code:it.itemCode,vendor:it.vendor,vendor_email:it.vendorEmail,owner:it.owner,status:it.status,priority:it.priority,notes:it.notes,document_name:it.documentName,follow_up:it.followUpDate,last_contact:it.lastContact,due_date:it.followUpDate,updated_at:new Date().toISOString()}));
+  await supa.from("items").delete().eq("user_id",userId);
+  const batch=[];for(let i=0;i<rows.length;i+=500)batch.push(rows.slice(i,i+500));
+  for(const b of batch)await supa.from("items").insert(b);
+}
+
+async function cloudLoadItems(userId){
+  if(!userId)return null;
+  const{data,error}=await supa.from("items").select("*").eq("user_id",userId).order("id");
+  if(error||!data||!data.length)return null;
+  return data.map(r=>({id:r.id,itemCode:r.item_code||"",itemName:r.item_name||"",vendor:r.vendor||"",vendorEmail:r.vendor_email||"",owner:r.owner||"",status:r.status||"Not Finished",priority:r.priority||"Medium",notes:r.notes||"",documentName:r.document_name||"",followUpDate:r.follow_up||"",lastContact:r.last_contact||""}));
+}
+
+function AuthGate({children}){
+  const[user,setUser]=useState(null);
+  const[loading,setLoading]=useState(true);
+  const[mode,setMode]=useState("login");
+  const[email,setEmail]=useState("");
+  const[pass,setPass]=useState("");
+  const[err,setErr]=useState("");
+  const[msg,setMsg]=useState("");
+  const[busy,setBusy]=useState(false);
+
+  useEffect(()=>{
+    supa.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);setLoading(false)});
+    const{data:{subscription}}=supa.auth.onAuthStateChange((_,session)=>{setUser(session?.user||null)});
+    return()=>subscription.unsubscribe();
+  },[]);
+
+  if(loading)return <div className="auth-wrap"><div className="auth-card" style={{textAlign:"center"}}><div style={{fontSize:"2rem",marginBottom:"12px"}}>&#9889;</div><p>Loading...</p></div></div>;
+  if(user)return children(user);
+
+  const doAuth=async(e)=>{
+    e.preventDefault();setErr("");setMsg("");setBusy(true);
+    if(mode==="login"){
+      const{error}=await supa.auth.signInWithPassword({email,password:pass});
+      if(error)setErr(error.message);
+    }else{
+      const{error}=await supa.auth.signUp({email,password:pass});
+      if(error)setErr(error.message);
+      else setMsg("Check your email to confirm, then log in!");
+    }
+    setBusy(false);
+  };
+
+  return(
+    <div className="auth-wrap">
+      <div className="auth-card">
+        <div style={{textAlign:"center",fontSize:"2.5rem",marginBottom:"8px"}}>&#9889;</div>
+        <h1>Notion</h1>
+        <p className="auth-sub">{mode==="login"?"Sign in to your account":"Create a new account"}</p>
+        {err&&<div className="auth-err">{err}</div>}
+        {msg&&<div className="auth-msg">{msg}</div>}
+        <form onSubmit={doAuth}>
+          <input type="email" placeholder="Email address" value={email} onChange={e=>setEmail(e.target.value)} required/>
+          <input type="password" placeholder="Password" value={pass} onChange={e=>setPass(e.target.value)} required minLength={6}/>
+          <button type="submit" className="auth-btn" disabled={busy}>{busy?"Please wait...":mode==="login"?"Sign In":"Sign Up"}</button>
+        </form>
+        <div className="auth-toggle">{mode==="login"?<span>No account? <button onClick={()=>{setMode("signup");setErr("");setMsg("")}}>Sign up</button></span>:<span>Have an account? <button onClick={()=>{setMode("login");setErr("");setMsg("")}}>Sign in</button></span>}</div>
+      </div>
+    </div>
+  );
+}
+
 const NL=String.fromCharCode(10);
 const SPLIT=new RegExp(String.fromCharCode(13)+"?"+String.fromCharCode(10));
 const getDate=()=>new Date().toISOString().slice(0,10);
@@ -175,14 +384,40 @@ function Tour({open,onClose}){
 }
 
 /* MAIN APP */
-function App(){
+function App({user}){
   const saved=loadSaved();
   const[items,setItems]=useState(saved?.items||[]);
   const[queue,setQueue]=useState(saved?.queue||[]);
   const[query,setQuery]=useState("");
   const[stF,setStF]=useState("All");
   const[prF,setPrF]=useState("All");
+  const[vnF,setVnF]=useState("All");
+  const[sortBy,setSortBy]=useState("");
+  const[sortDir,setSortDir]=useState("asc");
+  const[qaOpen,setQaOpen]=useState(false);
+  const[dark,setDark]=useState(()=>localStorage.getItem('dm')==='1');
+  useEffect(()=>{localStorage.setItem('dm',dark?'1':'0')},[dark]);
+  const[pageSize,setPageSize]=useState(25);
+  const[curPage,setCurPage]=useState(1);
+  const historyRef=useRef([]);
+  const futureRef=useRef([]);
+  const[histLen,setHistLen]=useState(0);
+  const[futLen,setFutLen]=useState(0);
+  const skipHistoryRef=useRef(false);
+  const[syncing,setSyncing]=useState(false);
+  const[cloudStatus,setCloudStatus]=useState("");
+  useEffect(()=>{const hk=e=>{if(e.key==="Escape"&&qaOpen)setQaOpen(false)};document.addEventListener("keydown",hk);return()=>document.removeEventListener("keydown",hk)},[qaOpen]);
+  useEffect(()=>{if(skipHistoryRef.current){skipHistoryRef.current=false;return;}if(items.length===0&&historyRef.current.length===0)return;const last=historyRef.current[historyRef.current.length-1];if(last&&JSON.stringify(last)===JSON.stringify(items))return;historyRef.current.push(JSON.parse(JSON.stringify(items)));if(historyRef.current.length>31)historyRef.current.splice(0,historyRef.current.length-31);futureRef.current=[];setHistLen(historyRef.current.length);setFutLen(0);},[items]);
+  const doUndo=()=>{if(historyRef.current.length<2)return;const cur=historyRef.current.pop();futureRef.current.push(cur);const prev=historyRef.current[historyRef.current.length-1];skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(prev)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Undo applied");};
+  const doRedo=()=>{if(futureRef.current.length===0)return;const next=futureRef.current.pop();historyRef.current.push(next);skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(next)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Redo applied");};
+  useEffect(()=>{const hk2=e=>{if((e.ctrlKey||e.metaKey)&&e.key==="z"&&!e.shiftKey){e.preventDefault();if(historyRef.current.length<2)return;const cur=historyRef.current.pop();futureRef.current.push(cur);const prev=historyRef.current[historyRef.current.length-1];skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(prev)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Undo applied");}if((e.ctrlKey||e.metaKey)&&(e.key==="y"||(e.key==="z"&&e.shiftKey))){e.preventDefault();if(futureRef.current.length===0)return;const next=futureRef.current.pop();historyRef.current.push(next);skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(next)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Redo applied");}};document.addEventListener("keydown",hk2);return()=>document.removeEventListener("keydown",hk2)},[]);
+  const uniqueVendors=useMemo(()=>[...new Set(items.map(i=>i.vendor).filter(Boolean))].sort(),[items]);
+  const toggleSort=col=>{if(sortBy===col)setSortDir(d=>d==="asc"?"desc":"asc");else{setSortBy(col);setSortDir("asc")}};
+  const clearFilters=()=>{setQuery("");setStF("All");setPrF("All");setVnF("All");setSortBy("");setSortDir("asc")};
+  const staleCount=useMemo(()=>{const now=Date.now();const wk=7*24*60*60*1000;return items.filter(i=>{if(i.status==="Completed")return false;if(!i.lastContact)return true;const d=new Date(i.lastContact);return isNaN(d.getTime())||now-d.getTime()>wk}).length},[items]);
+  const overdueCount=useMemo(()=>{const today=new Date().toISOString().slice(0,10);return items.filter(i=>i.status!=="Completed"&&i.followUpDate&&i.followUpDate<today).length},[items]);
   const[notice,setNotice]=useState(saved?.items?.length?"Your last session has been restored. Auto-save is on.":"Welcome! Upload a file or add items to get started. Auto-save is on.");
+  useEffect(()=>{if(!user)return;cloudLoadItems(user.id).then(cloudItems=>{if(cloudItems&&cloudItems.length){setItems(cloudItems);setNotice("Loaded "+cloudItems.length+" items from cloud.");setCloudStatus("Synced");}else{setCloudStatus("Local only")}}).catch(()=>{setCloudStatus("Offline")})},[]); 
   const[addOpen,setAddOpen]=useState(false);
   const[compOpen,setCompOpen]=useState(false);
   const[uplOpen,setUplOpen]=useState(false);
@@ -220,6 +455,7 @@ function App(){
       saveToStorage({items,queue,savedAt:ts});
       setLastSaved(ts);
       setAutoSaveLabel("Auto-saved: "+ts);
+      if(user&&items.length){setSyncing(true);cloudSaveItems(user.id,items).then(()=>{setCloudStatus("Synced");setSyncing(false)}).catch(()=>{setCloudStatus("Sync failed");setSyncing(false)})}
     },2000);
     return()=>clearTimeout(t);
   },[items,queue]);
@@ -238,7 +474,13 @@ function App(){
   const openBulk=function(gr){if(!gr.email){setNotice("Add email for "+gr.vendor+" in Vendor Directory first.");return}var e=mkBulkEmail(gr);setBulkVendor(gr);setBulkSubj(e.subject);setBulkBod(e.body);setBulkOpen(true)};
   const doBulkQueue=function(){if(!bulkVendor)return;var qid=topId(queue)+1;setQueue(function(p){return[{id:qid,to:bulkVendor.email,vendor:bulkVendor.vendor,itemCode:bulkVendor.items.length+" items",itemName:"Bulk SDS Request",type:"bulk",subject:bulkSubj,body:bulkBod,status:"Queued",queuedAt:getTime()}].concat(p)});setItems(function(p){return p.map(function(it){var m=bulkVendor.items.some(function(bi){return bi.id===it.id});if(m)return Object.assign({},it,{status:"In Progress",lastContact:getDate(),followUpDate:(function(){var d=new Date();d.setDate(d.getDate()+3);return d.toISOString().slice(0,10)})(),notes:[it.notes,getDate()+": Bulk SDS request queued."].filter(Boolean).join("\n")});return it})});setBulkOpen(false);setNotice("Queued bulk email for "+bulkVendor.vendor+" ("+bulkVendor.items.length+" items).")};
   function canEmail(item){return item.vendorEmail && item.vendorEmail.trim() !== "";}
-  const filtered=useMemo(()=>items.filter(it=>{const h=[it.itemCode,it.itemName,it.vendor,it.vendorEmail,it.owner,it.notes,it.status].join(" ").toLowerCase();return has(h,query.toLowerCase())&&(stF==="All"||it.status===stF)&&(prF==="All"||it.priority===prF)}),[items,query,stF,prF]);
+  const highlightMatch=(text,q)=>{if(!q||!text)return String(text||"");const s=String(text);const lower=s.toLowerCase();const ql=q.toLowerCase();const parts=[];let last=0;let idx=lower.indexOf(ql,last);while(idx>=0){if(idx>last)parts.push(s.slice(last,idx));parts.push(React.createElement("mark",{className:"hl",key:idx},s.slice(idx,idx+ql.length)));last=idx+ql.length;idx=lower.indexOf(ql,last);}if(last<s.length)parts.push(s.slice(last));return parts.length>1?React.createElement("span",null,...parts):s;};
+  const filtered=useMemo(()=>items.filter(it=>{const h=[it.itemCode,it.itemName,it.vendor,it.vendorEmail,it.owner,it.notes,it.status].join(" ").toLowerCase();return has(h,query.toLowerCase())&&(stF==="All"||it.status===stF)&&(prF==="All"||it.priority===prF)&&(vnF==="All"||it.vendor===vnF)}),[items,query,stF,prF,vnF]);
+  const sorted=useMemo(()=>{if(!sortBy)return filtered;return[...filtered].sort((a,b)=>{let va=a[sortBy]||"",vb=b[sortBy]||"";if(typeof va==="string")va=va.toLowerCase();if(typeof vb==="string")vb=vb.toLowerCase();if(va<vb)return sortDir==="asc"?-1:1;if(va>vb)return sortDir==="asc"?1:-1;return 0})},[filtered,sortBy,sortDir]);
+  const totalPages=Math.max(1,Math.ceil(sorted.length/pageSize));
+  const safePage=Math.min(curPage,totalPages);
+  const paged=sorted.slice((safePage-1)*pageSize,safePage*pageSize);
+  useEffect(()=>{setCurPage(1)},[query,stF,prF,vnF,pageSize,sortBy,sortDir]);
 
   const met=useMemo(()=>{const c=s=>items.filter(i=>i.status===s).length;const done=c("Completed");return{total:items.length,nf:c("Not Finished"),ip:c("In Progress"),na:c("Needs Attention"),done,pct:items.length?Math.round(done/items.length*100):0}},[items]);
 
@@ -246,12 +488,12 @@ function App(){
   const swapT=t=>{if(!active)return;const e=mkEmail(active,t);setEType(t);setSubj(e.subject);setBod(e.body)};
   const setSt=(id,s)=>setItems(p=>p.map(i=>i.id===id?{...i,status:s}:i));
   const doQueue=()=>{if(!active)return;const qid=topId(queue)+1;const lab=eType==="followup"?"Follow-up":eType==="clarification"?"Clarification":"SDS request";setQueue(p=>[{id:qid,to:active.vendorEmail,vendor:active.vendor,itemCode:active.itemCode,itemName:active.itemName,type:eType,subject:subj,body:bod,status:"Queued",queuedAt:getTime()},...p]);setItems(p=>p.map(i=>i.id===active.id?{...i,status:"In Progress",lastContact:getDate(),notes:[i.notes,getDate()+": "+lab+" queued."].filter(Boolean).join(NL)}:i));setCompOpen(false);setNotice("Queued email for "+active.itemCode+".")};
-  const testSend=id=>{setQueue(p=>p.map(m=>m.id===id?{...m,status:"Sent",sentAt:getTime()}:m));setNotice("Test send complete.")};
+  const testSend=id=>{const m=queue.find(x=>x.id===id);if(!m)return;setQueue(p=>p.map(x=>x.id===id?{...x,status:"Sending..."}:x));emailjs.send("service_s7fj4yt","template_s1azx1s",{to_email:m.to,subject:m.subject,message:m.body}).then(()=>{setQueue(p=>p.map(x=>x.id===id?{...x,status:"Sent",sentAt:getTime()}:x));setNotice("Email sent to "+m.to)}).catch(err=>{setQueue(p=>p.map(x=>x.id===id?{...x,status:"Failed"}:x));setNotice("Send failed: "+(err.text||err.message||"Unknown error"))})};
   const rmQ=id=>{setQueue(p=>p.filter(m=>m.id!==id));setNotice("Removed.")};
   const cpQ=m=>{try{navigator.clipboard.writeText("To: "+m.to+NL+"Subject: "+m.subject+NL+NL+m.body);setNotice("Copied!")}catch(e){setNotice("Copy failed.")}};
   const addItemFn=()=>{if(!ni.itemCode.trim()||!ni.itemName.trim()||!ni.vendor.trim()){setNotice("Need code, name, vendor.");return}const st=ni.vendorEmail?"Not Finished":"Needs Attention";setItems(p=>[{id:topId(p)+1,...ni,status:st,lastContact:"",documentName:"",followUpDate:""},...p]);setAddOpen(false);setNi({itemCode:"",itemName:"",vendor:"",vendorEmail:"",owner:"",priority:"Medium",notes:""});setNotice("Added "+ni.itemCode+".")};
   const markDone=id=>{setItems(p=>p.map(i=>i.id===id?{...i,status:"Completed",documentName:i.documentName||i.itemCode+"_SDS.pdf",notes:[i.notes,getDate()+": SDS received."].filter(Boolean).join(NL)}:i));setNotice("Completed.")};
-  const doExport=()=>{const cols=["id","itemCode","itemName","vendor","vendorEmail","status","lastContact","followUpDate","owner","priority","documentName","notes"];const esc=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const rows=(filtered.length?filtered:items).map(r=>cols.map(c=>esc(r[c])).join(","));const csv=[cols.join(","),...rows].join(NL);const blob=new Blob([csv],{type:"text/csv"});const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download="sds-"+getDate()+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setNotice("Exported.")};
+  const doExport=()=>{const cols=["id","itemCode","itemName","vendor","vendorEmail","status","lastContact","followUpDate","owner","priority","documentName","notes"];const esc=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const rows=(sorted.length?sorted:items).map(r=>cols.map(c=>esc(r[c])).join(","));const csv=[cols.join(","),...rows].join(NL);const blob=new Blob([csv],{type:"text/csv"});const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download="sds-"+getDate()+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setNotice("Exported.")};
   const runTest=()=>{if(!items.length){setNotice("Add items first.");return}const it=items.find(r=>r.status==="Not Finished")||items[0];const e=mkEmail(it,"request");const id=topId(queue)+1;setQueue(p=>[{id,to:it.vendorEmail,vendor:it.vendor,itemCode:it.itemCode,itemName:it.itemName,type:"request",subject:e.subject,body:e.body,status:"Queued",queuedAt:getTime()},...p]);setItems(p=>p.map(r=>r.id===it.id?{...r,status:"In Progress",lastContact:getDate()}:r));setNotice("Queued test for "+it.itemCode+".")};
 
   const processUpload=(csvText,fileName)=>{const parsed=parseCsv(csvText);const m=mapRows(parsed.rows,items.length);setDetectedCols(parsed.cols);if(!m.length){setNotice("No items found in "+fileName+".");return}setPrev(m);setRawRows(parsed.rows);setRawCols(parsed.cols);setColMap({code:"auto",name:"auto",vendor:"auto",email:"auto",status:"auto",owner:"auto",notes:"auto"});setNotice("Scanned "+m.length+" items from "+fileName+". Review column mapping.");setMapOpen(true)};
@@ -267,9 +509,53 @@ function App(){
   const isEmpty=items.length===0&&queue.length===0;
 
   return(
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 p-4 md:p-8">
+    <div className={"min-h-screen p-4 md:p-8 "+(dark?"dark bg-[#0f172a]":"bg-gradient-to-br from-slate-50 via-white to-blue-50")}>
       <Tour open={tourOpen} onClose={()=>setTourOpen(false)}/>
       <button className="help-btn" onClick={()=>setTourOpen(true)} title="Open Tutorial">?</button>
+      <button className="qa-btn" onClick={()=>setQaOpen(!qaOpen)} title="Quick Actions">⚡</button>
+      <button className="dm-toggle" onClick={()=>setDark(d=>!d)}>{dark?"☀ Light":"☾ Dark"}</button>
+      <div className={"qa-overlay"+(qaOpen?" open":"")} onClick={()=>setQaOpen(false)}></div>
+      <div className={"qa-panel"+(qaOpen?" open":"")}>
+        <div className="qa-hdr"><h2>⚡ Quick Actions</h2><button className="qa-x" onClick={()=>setQaOpen(false)}>✕</button></div>
+        <div className="qa-body">
+          <div className="qa-sec"><div className="qa-sec-title">At a Glance</div>
+            <div className="qa-stats">
+              <div className="qa-stat green"><div className="num">{met.pct}%</div><div className="lbl">Complete</div></div>
+              <div className="qa-stat blue"><div className="num">{met.total}</div><div className="lbl">Total Items</div></div>
+              <div className="qa-stat amber"><div className="num">{met.ip+met.nf}</div><div className="lbl">In Progress</div></div>
+              <div className="qa-stat red"><div className="num">{met.na}</div><div className="lbl">Needs Attention</div></div>
+            </div>
+          </div>
+          <div className="qa-sec"><div className="qa-sec-title">Alerts</div>
+            {staleCount>0?<div className="qa-alert warn" onClick={()=>{setTab("attention");setQaOpen(false)}}>⚠️ <span>{staleCount} item{staleCount>1?"s":""} with no contact in 7+ days</span><span className="qa-badge">{staleCount}</span></div>:null}
+            {overdueCount>0?<div className="qa-alert danger" onClick={()=>{setTab("dashboard");setQaOpen(false)}}>🚨 <span>{overdueCount} overdue follow-up{overdueCount>1?"s":""}</span><span className="qa-badge">{overdueCount}</span></div>:null}
+            {met.na>0?<div className="qa-alert warn" onClick={()=>{setTab("attention");setQaOpen(false)}}>📋 <span>{met.na} item{met.na>1?"s":""} need attention</span><span className="qa-badge">{met.na}</span></div>:null}
+            {staleCount===0&&overdueCount===0&&met.na===0?<div className="qa-alert ok">🎉 All clear! No alerts right now.</div>:null}
+          </div>
+          <div className="qa-sec"><div className="qa-sec-title">Quick Actions</div>
+            <div className="qa-actions">
+              <button className="qa-act" onClick={()=>{setAddOpen(true);setQaOpen(false)}}><span className="qa-icon">➕</span><span>Add Item</span></button>
+              <button className="qa-act" onClick={()=>{setUplOpen(true);setQaOpen(false)}}><span className="qa-icon">📂</span><span>Upload File</span></button>
+              <button className="qa-act" onClick={()=>{runTest();setQaOpen(false)}}><span className="qa-icon">✉️</span><span>Queue Test</span></button>
+              <button className="qa-act" onClick={()=>{doExport();setQaOpen(false)}}><span className="qa-icon">📥</span><span>Export CSV</span></button>
+            </div>
+          </div>
+          <div className="qa-sec"><div className="qa-sec-title">Jump To</div>
+            <div className="qa-nav">
+              {["dashboard","vendors","queue","emailQueue","attention","templates"].map(t=><button key={t} className={"qa-nav-btn"+(tab===t?" active":"")} onClick={()=>{setTab(t);setQaOpen(false)}}>{t==="dashboard"?"📊 Dashboard":t==="vendors"?"📇 Vendors":t==="queue"?"Team Queue":t==="emailQueue"?"Email Queue":t==="attention"?"⚠️ Attention":"Templates"}</button>)}
+            </div>
+          </div>
+          <div className="qa-sec"><div className="qa-sec-title">Quick Filters</div>
+            <div className="qa-nav">
+              <button className="qa-nav-btn" onClick={()=>{setStF("Needs Attention");setTab("queue");setQaOpen(false)}}>🔴 Needs Attention</button>
+              <button className="qa-nav-btn" onClick={()=>{setStF("In Progress");setTab("queue");setQaOpen(false)}}>🟡 In Progress</button>
+              <button className="qa-nav-btn" onClick={()=>{setStF("Not Finished");setTab("queue");setQaOpen(false)}}>🟠 Not Finished</button>
+              <button className="qa-nav-btn" onClick={()=>{setStF("Completed");setTab("queue");setQaOpen(false)}}>🟢 Completed</button>
+              <button className="qa-nav-btn" onClick={()=>{clearFilters();setTab("queue");setQaOpen(false)}}>✖ Clear Filters</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="mx-auto max-w-7xl space-y-6">
 
         <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm">
@@ -288,13 +574,14 @@ function App(){
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
               <Btn variant="outline" onClick={()=>doSave(items,queue)}>&#128190; Save</Btn>
+              <span className="undo-bar"><button onClick={doUndo} disabled={histLen<2} title="Undo (Ctrl+Z)">&#8617; Undo{histLen>1&&<span className="undo-count">{histLen-1}</span>}</button><button onClick={doRedo} disabled={futLen===0} title="Redo (Ctrl+Y)">&#8618; Redo{futLen>0&&<span className="undo-count">{futLen}</span>}</button></span>
               <Btn variant="outline" onClick={saveAsFile}>&#128196; Save As File</Btn>
               <label className="font-medium rounded-xl transition-colors px-4 py-2 text-sm border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer inline-flex items-center">&#128194; Open File<input type="file" className="hidden" onChange={openFile}/></label>
               <Btn variant="outline" onClick={()=>setNewProjOpen(true)}>&#10133; New Project</Btn>
               <Btn variant="outline" onClick={()=>setDirOpen(true)}>&#128231; Vendor Directory</Btn>
               <Btn variant="outline" onClick={function(){setBulkOpen(true);setBulkVendor(null)}}>&#9993; Bulk Email</Btn>
             </div>
-            <div className="text-sm text-slate-500 flex items-center gap-2">{autoSaveLabel?<><span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>{autoSaveLabel}</>:<><span className="inline-block w-2 h-2 rounded-full bg-slate-300"></span>Not saved yet</>}</div>
+            <div className="text-sm text-slate-500 flex items-center gap-2">{autoSaveLabel?<><span className={"sync-dot "+(syncing?"busy":"ok")}></span>{autoSaveLabel}{cloudStatus&&<span className="ml-2 text-xs text-slate-400">{" | Cloud: "+cloudStatus}</span>}<Btn size="sm" variant="ghost" cls="ml-2 text-xs" onClick={async()=>{await supa.auth.signOut();setNotice("Signed out.")}}>Logout</Btn></>:<><span className="inline-block w-2 h-2 rounded-full bg-slate-300"></span>Not saved yet</>}</div>
           </div>
         </div>
 
@@ -345,9 +632,11 @@ function App(){
 
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
               <div className="flex flex-wrap items-center gap-4">
-                <input className="flex-1 min-w-[240px] rounded-xl border border-slate-200 px-4 py-2 text-sm" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search item, vendor, owner, notes, status..."/>
+                <input className="flex-1 min-w-[240px] rounded-xl border border-slate-200 px-4 py-2 text-sm" value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"){e.preventDefault();setTab("queue")}}} placeholder="Search item, vendor, owner, notes, status..."/>
                 <select className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={stF} onChange={e=>setStF(e.target.value)}><option value="All">All statuses</option>{STATUSES.map(s=><option key={s} value={s}>{s}</option>)}</select>
                 <select className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={prF} onChange={e=>setPrF(e.target.value)}><option value="All">All priorities</option>{PRIOS.map(p=><option key={p} value={p}>{p}</option>)}</select>
+                <select className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={vnF} onChange={e=>setVnF(e.target.value)}><option value="All">All vendors</option>{uniqueVendors.map(v=><option key={v} value={v}>{v}</option>)}</select>
+                {(query||stF!=="All"||prF!=="All"||vnF!=="All"||sortBy)?<button onClick={clearFilters} className="px-3 py-2 text-xs font-medium rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors whitespace-nowrap">&times; Clear All</button>:null}
               </div>
             </div>
 
@@ -420,26 +709,35 @@ function App(){
 
             {tab==="queue"&&(
               <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
-                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200"><h3 className="text-xl font-semibold text-slate-900">Shared Request Queue</h3><p className="text-sm text-slate-500">{"Showing "+filtered.length+" of "+items.length}</p></div>
+                <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200"><h3 className="text-xl font-semibold text-slate-900">Shared Request Queue</h3><p className="text-sm text-slate-500">{"Showing "+((safePage-1)*pageSize+1)+"\u2013"+Math.min(safePage*pageSize,sorted.length)+" of "+sorted.length+" items"}</p></div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
-                    <thead className="bg-slate-100 text-slate-600"><tr><th className="px-4 py-3 text-left font-medium">Item</th><th className="px-4 py-3 text-left font-medium">Vendor</th><th className="px-4 py-3 text-left font-medium">Owner</th><th className="px-4 py-3 text-left font-medium">Priority</th><th className="px-4 py-3 text-left font-medium">Status</th><th className="px-4 py-3 text-left font-medium">Last Contact</th><th className="px-4 py-3 text-left font-medium">Follow-Up</th><th className="px-4 py-3 text-right font-medium">Actions</th></tr></thead>
+                    <thead className="bg-slate-100 text-slate-600"><tr><th className={"px-4 py-3 text-left font-medium srt-th"+(sortBy==="itemName"?" active":"")} onClick={()=>toggleSort("itemName")}>Item<span className="srt-ar">{sortBy==="itemName"?(sortDir==="asc"?"▲":"▼"):"▲"}</span></th><th className={"px-4 py-3 text-left font-medium srt-th"+(sortBy==="vendor"?" active":"")} onClick={()=>toggleSort("vendor")}>Vendor<span className="srt-ar">{sortBy==="vendor"?(sortDir==="asc"?"▲":"▼"):"▲"}</span></th><th className={"px-4 py-3 text-left font-medium srt-th"+(sortBy==="owner"?" active":"")} onClick={()=>toggleSort("owner")}>Owner<span className="srt-ar">{sortBy==="owner"?(sortDir==="asc"?"▲":"▼"):"▲"}</span></th><th className={"px-4 py-3 text-left font-medium srt-th"+(sortBy==="priority"?" active":"")} onClick={()=>toggleSort("priority")}>Priority<span className="srt-ar">{sortBy==="priority"?(sortDir==="asc"?"▲":"▼"):"▲"}</span></th><th className={"px-4 py-3 text-left font-medium srt-th"+(sortBy==="status"?" active":"")} onClick={()=>toggleSort("status")}>Status<span className="srt-ar">{sortBy==="status"?(sortDir==="asc"?"▲":"▼"):"▲"}</span></th><th className="px-4 py-3 text-left font-medium">Last Contact</th><th className="px-4 py-3 text-left font-medium">Follow-Up</th><th className="px-4 py-3 text-right font-medium">Actions</th></tr></thead>
                     <tbody>
-                      {filtered.map(item=>(
+                      {paged.map(item=>(
                         <tr key={item.id} className="border-t border-slate-200 align-top hover:bg-slate-50">
-                          <td className="min-w-[240px] px-4 py-4"><p className="font-medium text-slate-900">{item.itemName}</p><p className="text-slate-500">{item.itemCode}</p><p className="mt-1 line-clamp-2 text-xs text-slate-500">{item.notes}</p></td>
-                          <td className="min-w-[200px] px-4 py-4"><p>{item.vendor}</p><p className="break-all text-slate-500">{item.vendorEmail||"No email"}</p></td>
-                          <td className="px-4 py-4">{item.owner}</td>
+                          <td className="min-w-[240px] px-4 py-4"><p className="font-medium text-slate-900">{query?highlightMatch(item.itemName,query):item.itemName}</p><p className="text-slate-500">{query?highlightMatch(item.itemCode,query):item.itemCode}</p><p className="mt-1 line-clamp-2 text-xs text-slate-500">{query?highlightMatch(item.notes,query):item.notes}</p></td>
+                          <td className="min-w-[200px] px-4 py-4"><p>{query?highlightMatch(item.vendor,query):item.vendor}</p><p className="break-all text-slate-500">{query?highlightMatch(item.vendorEmail||"No email",query):(item.vendorEmail||"No email")}</p></td>
+                          <td className="px-4 py-4">{query?highlightMatch(item.owner,query):item.owner}</td>
                           <td className="px-4 py-4"><Badge cls={PrC[item.priority]||PrC.Medium}>{item.priority}</Badge></td>
                           <td className="min-w-[160px] px-4 py-4"><select className="w-full rounded-xl border border-slate-200 px-2 py-1.5 text-sm bg-white" value={item.status} onChange={e=>setSt(item.id,e.target.value)}>{STATUSES.map(s=><option key={s} value={s}>{s}</option>)}</select></td>
                           <td className="px-4 py-4 text-slate-600">{item.lastContact||"-"}</td><td className="px-4 py-4">{item.status!=="Completed"?React.createElement("input",{type:"date",className:"rounded-lg border "+(item.followUpDate&&new Date(item.followUpDate)<new Date()?"border-rose-300 bg-rose-50 text-rose-700 font-semibold":"border-slate-200 bg-white text-slate-700")+" px-2 py-1 text-sm w-32",value:item.followUpDate||"",onChange:function(e){setItems(function(p){return p.map(function(x){return x.id===item.id?Object.assign({},x,{followUpDate:e.target.value}):x})})}}):React.createElement("span",{className:"text-emerald-600 text-sm"},"\\u2713 Done")}</td>
                           <td className="min-w-[300px] px-4 py-4"><div className="flex flex-wrap justify-end gap-2"><Btn size="sm" variant="outline" onClick={function(){if(!item.vendorEmail){var em=window.prompt("No vendor email found for "+item.vendor+". Please enter their email:");if(em){item.vendorEmail=em.trim();compose(item,item.status==="In Progress"?"followup":"request")}else{setNotice("Vendor email is needed to compose. You can add it in the Vendor Directory.")}}else{compose(item,item.status==="In Progress"?"followup":"request")}}}>&#9993; Compose</Btn><Btn size="sm" variant="outline" onClick={()=>compose(item,"clarification")}>Clarify</Btn><Btn size="sm" onClick={()=>markDone(item.id)}>Complete</Btn></div></td>
                         </tr>
                       ))}
-                      {filtered.length===0&&<tr><td colSpan={7} className="px-4 py-10 text-center text-slate-500">No items match your filters.</td></tr>}
+                      {sorted.length===0&&<tr><td colSpan={7} className="px-4 py-10 text-center text-slate-500">No items match your filters.</td></tr>}
                     </tbody>
                   </table>
                 </div>
+                {sorted.length>pageSize&&<div className="pg-bar">
+                  <button disabled={safePage<=1} onClick={()=>setCurPage(1)}>&laquo;</button>
+                  <button disabled={safePage<=1} onClick={()=>setCurPage(p=>p-1)}>&lsaquo;</button>
+                  {(()=>{const pages=[];const start=Math.max(1,safePage-2);const end=Math.min(totalPages,safePage+2);if(start>1){pages.push(<button key={1} onClick={()=>setCurPage(1)}>1</button>);if(start>2)pages.push(<span key="ds" className="pg-info">&hellip;</span>);}for(let i=start;i<=end;i++)pages.push(<button key={i} className={i===safePage?"active":""} onClick={()=>setCurPage(i)}>{i}</button>);if(end<totalPages){if(end<totalPages-1)pages.push(<span key="de" className="pg-info">&hellip;</span>);pages.push(<button key={totalPages} onClick={()=>setCurPage(totalPages)}>{totalPages}</button>);}return pages;})()}
+                  <button disabled={safePage>=totalPages} onClick={()=>setCurPage(p=>p+1)}>&rsaquo;</button>
+                  <button disabled={safePage>=totalPages} onClick={()=>setCurPage(totalPages)}>&raquo;</button>
+                  <select value={pageSize} onChange={e=>{setPageSize(+e.target.value);setCurPage(1)}}>{[10,25,50,100].map(n=><option key={n} value={n}>{n}/page</option>)}</select>
+                  <span className="pg-info">{"Page "+safePage+" of "+totalPages}</span>
+                </div>}
               </div>
             )}
 
@@ -459,7 +757,7 @@ function App(){
                         </div>
                         <div className="flex flex-wrap gap-2">
                           <Btn size="sm" variant="outline" onClick={()=>cpQ(m)}>Copy</Btn>
-                          <Btn size="sm" disabled={m.status==="Sent"} onClick={()=>testSend(m.id)}>Test Send</Btn><Btn size="sm" variant="outline" onClick={function(){openInOutlook(m.to,m.subject,m.body)}}>&#128228; Outlook</Btn>
+                          <Btn size="sm" disabled={m.status==="Sent"} onClick={()=>testSend(m.id)}>{m.status==="Sending..."?"Sending...":"\uD83D\uDCE7 Send"}</Btn><Btn size="sm" variant="outline" onClick={function(){openInOutlook(m.to,m.subject,m.body)}}>&#128228; Outlook</Btn>
                           <Btn size="sm" variant="ghost" cls="text-red-600" onClick={()=>rmQ(m.id)}>Remove</Btn>
                         </div>
                       </div>
@@ -596,7 +894,7 @@ function App(){
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+ReactDOM.createRoot(document.getElementById("root")).render(<AuthGate>{(user)=><App user={user}/>}</AuthGate>);
 </script>
 </body>
 </html>
