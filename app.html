@@ -9,8 +9,8 @@
 <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
 body{margin:0;font-family:system-ui,-apple-system,sans-serif}
 .line-clamp-2{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -59,9 +59,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .srt-ar{font-size:.6rem;margin-left:4px;opacity:.5}
 .srt-th.active .srt-ar{opacity:1;color:#4f46e5}
 @media(max-width:480px){.qa-panel{width:100vw}.qa-btn{bottom:18px;left:18px}}
-
-
-/* ── Dark Mode ── */
+/* Dark Mode */
 .dark{color:#e2e8f0}
 .dark .text-slate-900{color:#f1f5f9!important}.dark .text-slate-700,.dark .text-slate-600{color:#e2e8f0!important}.dark .text-slate-500,.dark .text-slate-400{color:#94a3b8!important}
 .dark .text-gray-800,.dark .text-gray-700,.dark .text-gray-600{color:#e2e8f0!important}.dark .text-gray-500,.dark .text-gray-400{color:#94a3b8!important}
@@ -122,8 +120,7 @@ select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='ht
 .dark .tour-fade .text-slate-700,.dark .tour-fade .text-slate-600{color:#cbd5e1!important}
 .dm-toggle{position:fixed;top:12px;right:16px;z-index:9999;padding:6px 14px;border-radius:9999px;border:1px solid #334155;font-size:13px;cursor:pointer;background:#1e293b;color:#e2e8f0;transition:background .2s}
 .dm-toggle:hover{background:#334155}
-
-/* ── Pagination ── */
+/* Pagination */
 .pg-bar{display:flex;align-items:center;justify-content:center;gap:6px;margin:12px 0;flex-wrap:wrap}
 .pg-bar button{min-width:34px;height:34px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:13px;cursor:pointer;transition:all .15s}
 .pg-bar button:hover{background:#e2e8f0}.pg-bar button.active{background:#4f46e5;color:#fff;border-color:#4f46e5}
@@ -135,108 +132,67 @@ mark.hl{background:#fde68a;color:#92400e;border-radius:2px;padding:0 1px}
 .dark .pg-bar button.active{background:#6366f1;color:#fff;border-color:#6366f1}
 .dark .pg-bar select{background:#1e293b;color:#e2e8f0;border-color:#334155}.dark .pg-bar .pg-info{color:#94a3b8}
 .dark mark.hl{background:#854d0e;color:#fef3c7}
-
-/* ── Undo/Redo ── */
+/* Undo/Redo */
 .undo-bar{display:inline-flex;gap:4px;margin-left:8px}
 .undo-bar button{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:10px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:13px;cursor:pointer;transition:all .15s}
 .undo-bar button:hover:not(:disabled){background:#e2e8f0}.undo-bar button:disabled{opacity:.35;cursor:not-allowed}
 .undo-bar .undo-count{font-size:11px;background:#e2e8f0;color:#64748b;border-radius:9999px;padding:0 6px;min-width:18px;text-align:center}
 .dark .undo-bar button{background:#1e293b;color:#e2e8f0;border-color:#334155}.dark .undo-bar button:hover:not(:disabled){background:#334155}
 .dark .undo-bar .undo-count{background:#334155;color:#94a3b8}
-
-/* ── Auth ── */
-.auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#334155 100%);padding:20px}
-.auth-card{background:#fff;border-radius:24px;padding:40px;width:420px;max-width:95vw;box-shadow:0 25px 50px rgba(0,0,0,.25)}
-.auth-card h1{font-size:28px;font-weight:700;color:#1e293b;margin-bottom:4px;text-align:center}
-.auth-card .auth-sub{text-align:center;color:#64748b;font-size:14px;margin-bottom:24px}
-.auth-card input{width:100%;padding:12px 16px;border:1.5px solid #e2e8f0;border-radius:12px;font-size:14px;margin-bottom:12px;transition:border .2s;box-sizing:border-box}
-.auth-card input:focus{outline:none;border-color:#4f46e5}
-.auth-card .auth-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#6366f1);color:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s;margin-top:4px}
-.auth-card .auth-btn:hover{opacity:.9}
-.auth-card .auth-toggle{text-align:center;margin-top:16px;font-size:13px;color:#64748b}
-.auth-card .auth-toggle button{background:none;border:none;color:#4f46e5;font-weight:600;cursor:pointer;text-decoration:underline}
-.auth-card .auth-err{background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:12px}
-.auth-card .auth-msg{background:#ecfdf5;border:1px solid #a7f3d0;color:#059669;padding:10px 14px;border-radius:10px;font-size:13px;margin-bottom:12px}
-.sync-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
-.sync-dot.ok{background:#22c55e}.sync-dot.busy{background:#f59e0b;animation:spulse 1s infinite}
-
+/* Live Dashboard */
+.ld-wrap{background:linear-gradient(135deg,#0f172a 0%,#1e293b 50%,#0f172a 100%);border-radius:24px;padding:32px;border:1px solid #1e293b;box-shadow:0 25px 50px rgba(0,0,0,.3)}
+.ld-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px}
+.ld-title{display:flex;align-items:center;gap:12px;font-size:1.5rem;font-weight:700;color:#f1f5f9}
+.ld-live{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);padding:4px 14px;border-radius:20px;font-size:.75rem;font-weight:700;color:#4ade80;letter-spacing:1px;text-transform:uppercase}
+.ld-live .ld-dot{width:8px;height:8px;background:#4ade80;border-radius:50%;animation:ldpulse 2s ease-in-out infinite}
+@keyframes ldpulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(74,222,128,.5)}50%{opacity:.7;box-shadow:0 0 0 8px rgba(74,222,128,0)}}
+.ld-clock{font-size:.9rem;color:#94a3b8;font-weight:500;font-variant-numeric:tabular-nums}
+.ld-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.ld-stat{background:rgba(30,41,59,.8);border:1px solid #334155;border-radius:16px;padding:20px;text-align:center;transition:all .3s}
+.ld-stat:hover{border-color:#4f46e5;transform:translateY(-2px)}
+.ld-stat-val{font-size:2.2rem;font-weight:800;line-height:1.1;margin-bottom:4px}
+.ld-stat-lbl{font-size:.75rem;color:#94a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.ld-stat-sub{font-size:.72rem;color:#64748b;margin-top:4px}
+.ld-stat.green .ld-stat-val{color:#4ade80}
+.ld-stat.amber .ld-stat-val{color:#fbbf24}
+.ld-stat.rose .ld-stat-val{color:#fb7185}
+.ld-stat.indigo .ld-stat-val{color:#a5b4fc}
+.ld-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.ld-card{background:rgba(30,41,59,.8);border:1px solid #334155;border-radius:16px;padding:20px}
+.ld-card-title{font-size:.85rem;font-weight:700;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ld-feed{max-height:340px;overflow-y:auto;padding-right:8px}
+.ld-feed::-webkit-scrollbar{width:4px}.ld-feed::-webkit-scrollbar-track{background:#1e293b}.ld-feed::-webkit-scrollbar-thumb{background:#475569;border-radius:4px}
+.ld-feed-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid rgba(51,65,85,.5)}
+.ld-feed-item:last-child{border-bottom:none}
+.ld-feed-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.ld-feed-dot.complete{background:#4ade80}.ld-feed-dot.progress{background:#fbbf24}.ld-feed-dot.attention{background:#fb7185}.ld-feed-dot.info{background:#60a5fa}.ld-feed-dot.email{background:#a78bfa}
+.ld-feed-text{font-size:.82rem;color:#cbd5e1;line-height:1.5;flex:1}
+.ld-feed-text strong{color:#f1f5f9;font-weight:600}
+.ld-feed-time{font-size:.7rem;color:#64748b;white-space:nowrap;margin-top:2px}
+.ld-vp{display:flex;flex-direction:column;gap:12px}
+.ld-vp-item{background:rgba(15,23,42,.5);border-radius:12px;padding:12px 16px}
+.ld-vp-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.ld-vp-name{font-size:.85rem;font-weight:600;color:#e2e8f0}
+.ld-vp-pct{font-size:.82rem;font-weight:700}
+.ld-vp-pct.high{color:#4ade80}.ld-vp-pct.mid{color:#fbbf24}.ld-vp-pct.low{color:#fb7185}
+.ld-vp-bar{width:100%;height:6px;background:#1e293b;border-radius:3px;overflow:hidden;margin-bottom:6px}
+.ld-vp-fill{height:100%;border-radius:3px;transition:width .8s ease}
+.ld-vp-fill.high{background:linear-gradient(90deg,#22c55e,#4ade80)}.ld-vp-fill.mid{background:linear-gradient(90deg,#f59e0b,#fbbf24)}.ld-vp-fill.low{background:linear-gradient(90deg,#ef4444,#fb7185)}
+.ld-vp-tags{display:flex;gap:6px;flex-wrap:wrap}
+.ld-vp-tag{font-size:.68rem;padding:2px 8px;border-radius:8px;font-weight:600}
+.ld-vp-tag.g{background:rgba(34,197,94,.15);color:#4ade80}
+.ld-vp-tag.a{background:rgba(245,158,11,.15);color:#fbbf24}
+.ld-vp-tag.r{background:rgba(239,68,68,.15);color:#fb7185}
+.ld-vp-tag.s{background:rgba(100,116,139,.15);color:#94a3b8}
+@media(max-width:768px){.ld-stats{grid-template-columns:1fr 1fr}.ld-grid{grid-template-columns:1fr}}
+@media(max-width:480px){.ld-stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div id="root"></div>
 <script type="text/babel">
 const {useState,useMemo,useRef,useEffect,useCallback}=React;
-const SUPA_URL="https://hlceoxvmgeymdmprrobx.supabase.co";
-const SUPA_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhsY2VveHZtZ2V5bWRtcHJyb2J4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwMTE0NzYsImV4cCI6MjA5NjU4NzQ3Nn0.zc1h0-AoFt89S-gbVxda5QcDnR-eoH7GgZ1glzCsaKQ";
-const supa=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 emailjs.init("JQVKZHu7BEcEBEQdF");
-
-async function cloudSaveItems(userId,items){
-  if(!userId||!items.length)return;
-  const rows=items.map(it=>({id:it.id,user_id:userId,item_name:it.itemName,item_code:it.itemCode,vendor:it.vendor,vendor_email:it.vendorEmail,owner:it.owner,status:it.status,priority:it.priority,notes:it.notes,document_name:it.documentName,follow_up:it.followUpDate,last_contact:it.lastContact,due_date:it.followUpDate,updated_at:new Date().toISOString()}));
-  await supa.from("items").delete().eq("user_id",userId);
-  const batch=[];for(let i=0;i<rows.length;i+=500)batch.push(rows.slice(i,i+500));
-  for(const b of batch)await supa.from("items").insert(b);
-}
-
-async function cloudLoadItems(userId){
-  if(!userId)return null;
-  const{data,error}=await supa.from("items").select("*").eq("user_id",userId).order("id");
-  if(error||!data||!data.length)return null;
-  return data.map(r=>({id:r.id,itemCode:r.item_code||"",itemName:r.item_name||"",vendor:r.vendor||"",vendorEmail:r.vendor_email||"",owner:r.owner||"",status:r.status||"Not Finished",priority:r.priority||"Medium",notes:r.notes||"",documentName:r.document_name||"",followUpDate:r.follow_up||"",lastContact:r.last_contact||""}));
-}
-
-function AuthGate({children}){
-  const[user,setUser]=useState(null);
-  const[loading,setLoading]=useState(true);
-  const[mode,setMode]=useState("login");
-  const[email,setEmail]=useState("");
-  const[pass,setPass]=useState("");
-  const[err,setErr]=useState("");
-  const[msg,setMsg]=useState("");
-  const[busy,setBusy]=useState(false);
-
-  useEffect(()=>{
-    supa.auth.getSession().then(({data:{session}})=>{setUser(session?.user||null);setLoading(false)});
-    const{data:{subscription}}=supa.auth.onAuthStateChange((_,session)=>{setUser(session?.user||null)});
-    return()=>subscription.unsubscribe();
-  },[]);
-
-  if(loading)return <div className="auth-wrap"><div className="auth-card" style={{textAlign:"center"}}><div style={{fontSize:"2rem",marginBottom:"12px"}}>&#9889;</div><p>Loading...</p></div></div>;
-  if(user)return children(user);
-
-  const doAuth=async(e)=>{
-    e.preventDefault();setErr("");setMsg("");setBusy(true);
-    if(mode==="login"){
-      const{error}=await supa.auth.signInWithPassword({email,password:pass});
-      if(error)setErr(error.message);
-    }else{
-      const{error}=await supa.auth.signUp({email,password:pass});
-      if(error)setErr(error.message);
-      else setMsg("Check your email to confirm, then log in!");
-    }
-    setBusy(false);
-  };
-
-  return(
-    <div className="auth-wrap">
-      <div className="auth-card">
-        <div style={{textAlign:"center",fontSize:"2.5rem",marginBottom:"8px"}}>&#9889;</div>
-        <h1>Notion</h1>
-        <p className="auth-sub">{mode==="login"?"Sign in to your account":"Create a new account"}</p>
-        {err&&<div className="auth-err">{err}</div>}
-        {msg&&<div className="auth-msg">{msg}</div>}
-        <form onSubmit={doAuth}>
-          <input type="email" placeholder="Email address" value={email} onChange={e=>setEmail(e.target.value)} required/>
-          <input type="password" placeholder="Password" value={pass} onChange={e=>setPass(e.target.value)} required minLength={6}/>
-          <button type="submit" className="auth-btn" disabled={busy}>{busy?"Please wait...":mode==="login"?"Sign In":"Sign Up"}</button>
-        </form>
-        <div className="auth-toggle">{mode==="login"?<span>No account? <button onClick={()=>{setMode("signup");setErr("");setMsg("")}}>Sign up</button></span>:<span>Have an account? <button onClick={()=>{setMode("login");setErr("");setMsg("")}}>Sign in</button></span>}</div>
-      </div>
-    </div>
-  );
-}
-
 const NL=String.fromCharCode(10);
 const SPLIT=new RegExp(String.fromCharCode(13)+"?"+String.fromCharCode(10));
 const getDate=()=>new Date().toISOString().slice(0,10);
@@ -245,25 +201,17 @@ const STATUSES=["Not Finished","In Progress","Needs Attention","Completed"];
 const PRIOS=["Low","Medium","High","Urgent"];
 const STORE_KEY="sds_manager_project";
 const TOUR_KEY="sds_manager_tour_seen";
-
 const SC={"Not Finished":"bg-slate-100 text-slate-700 border border-slate-200","In Progress":"bg-amber-100 text-amber-800 border border-amber-200","Needs Attention":"bg-rose-100 text-rose-800 border border-rose-200","Completed":"bg-emerald-100 text-emerald-800 border border-emerald-200"};
 const SPan={"Not Finished":"border-slate-200 bg-slate-50","In Progress":"border-amber-200 bg-amber-50","Needs Attention":"border-rose-200 bg-rose-50","Completed":"border-emerald-200 bg-emerald-50"};
 const PrC={"Low":"bg-slate-100 text-slate-700 border border-slate-200","Medium":"bg-blue-100 text-blue-700 border border-blue-200","High":"bg-orange-100 text-orange-700 border border-orange-200","Urgent":"bg-red-100 text-red-700 border border-red-200"};
-
 function loadSaved(){try{const d=localStorage.getItem(STORE_KEY);if(d){return JSON.parse(d)}}catch(e){}return null}
 function saveToStorage(data){try{localStorage.setItem(STORE_KEY,JSON.stringify(data))}catch(e){}}
 function isTourSeen(){try{return!!localStorage.getItem(TOUR_KEY)}catch(e){return false}}
 function markTourSeen(){try{localStorage.setItem(TOUR_KEY,"1")}catch(e){}}
-
 function has(s,sub){return s.indexOf(sub)>=0}
 function topId(a){let m=0;a.forEach(x=>{if(x.id>m)m=x.id});return m}
 function norm(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]/g,"")}
-
-const COMP_WORDS=["yes","y","x","done","complete","completed","received","found","onfile","have","obtained","true","ok","good","got","gotit","haveit","archived","filed"];
-const PROG_WORDS=["pending","requested","sent","emailed","contacted","inprogress","followup","following","waiting","awaiting"];
-const ATTN_WORDS=["notfound","missing","discontinued","unavailable","issue","error","problem","noresponse","noreply","dead","outofstock","backordered"];
 const YES_RE=/^(yes|y|x|true|1|ok|done|complete|completed|received|found|have|obtained|good)$/i;
-
 const CODE_KEYS=["itemcode","code","sku","itemnumber","itemno","item","internalid","no","number","acmecode","acme","catalog","catalognumber","part","partnumber","upc","itemnum","plu","id"];
 const NAME_KEYS=["displayname","itemname","name","description","desc","itemdescription","productdescription","productname","product","title","chemical","chemicalname"];
 const VEND_KEYS=["preferredvendor","vendor","supplier","manufacturer","mfg","mfr","manufacturername","suppliername","company","brand","vendorname"];
@@ -275,11 +223,9 @@ const NOTE_KEYS=["notes","note","comments","comment","remarks","details","info"]
 const OWNER_KEYS=["owner","assignedto","buyer","assignee","rep","person","who","team"];
 const PRIO_KEYS=["priority","urgency","level","importance"];
 const DATE_KEYS=["receiveddate","datereceived","sdsdate","dateadded","datecompleted","completeddate","donedate"];
-
 function pick(row,keyList,fb){for(const k of keyList){const v=row[k];if(v!=null&&String(v).trim())return String(v).trim()}return fb||""}
 function isYes(v){const s=String(v||"").trim();if(!s)return false;return YES_RE.test(s)}
 function isDate(v){const s=String(v||"").trim();if(!s)return false;if(/\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}/.test(s))return true;if(/\d{4}-\d{2}-\d{2}/.test(s))return true;if(/\d{5}/.test(s)&&!has(s," "))return true;return false}
-
 function autoSt(row){
   var skeys=["sdsavailable","status","sdsstatus","stage","state","sds","sdsonfile","sdsfound","sdsreceived","havesds","received","complete","completed","done","onfile","found"];
   var dkeys=["documentname","document","file","sdsfile","filename","filepath","sdsdocument","sdsfilename","attachment"];
@@ -293,9 +239,7 @@ function autoSt(row){
   return"Not Finished";
 }
 function autoPr(row,st){const r=pick(row,PRIO_KEYS,"");if(PRIOS.indexOf(r)>=0)return r;if(st==="Needs Attention")return"Urgent";const n=pick(row,NOTE_KEYS,"").toLowerCase();if(has(n,"urgent")||has(n,"asap")||has(n,"critical"))return"Urgent";if(has(n,"chemical")||has(n,"herbicide")||has(n,"hazard"))return"High";return"Medium"}
-
 function splitRow(line,d){const out=[];let cur="";let q=false;for(let i=0;i<line.length;i++){const c=line[i];const nx=line[i+1]||"";if(c==='"'&&q&&nx==='"'){cur+='"';i++}else if(c==='"')q=!q;else if(c===d&&!q){out.push(cur.trim());cur=""}else cur+=c}out.push(cur.trim());return out}
-
 function parseCsv(text){
   const s=String(text||"").trim();if(!s)return{rows:[],cols:[]};
   const d=has(s,"\t")?"\t":",";
@@ -308,9 +252,7 @@ function parseCsv(text){
   const rows=data.map(line=>{const cells=splitRow(line,d);const row={};cols.forEach((c,i)=>{row[c]=cells[i]||""});return row});
   return{rows,cols:isH?origHdr:cols};
 }
-
 function mapRows(rows,off){return rows.map((row,i)=>{const st=autoSt(row);return{id:off+i+1,itemCode:pick(row,CODE_KEYS,"UPLOAD-"+(off+i+1)),itemName:pick(row,NAME_KEYS,"Uploaded Item"),vendor:pick(row,VEND_KEYS,"Unknown Vendor"),vendorEmail:pick(row,EMAIL_KEYS,""),status:st,priority:autoPr(row,st),lastContact:pick(row,[...PROG_KEYS,"lastcontact","lastsent"],""),owner:pick(row,OWNER_KEYS,"Team"),documentName:pick(row,DOC_KEYS,""),notes:pick(row,NOTE_KEYS,"Imported."),followUpDate:""}}).map(function(item){if(!item.vendorEmail&&typeof lookupVendorEmail==="function"){item.vendorEmail=lookupVendorEmail(item.vendor)}return item})}
-
 function mkEmail(item,type){
   const nm=item.itemName||"[Item Name]";const cd=item.itemCode||"[Item Code]";const lb=nm+" ("+cd+")";
   const j=a=>a.join(NL);
@@ -318,13 +260,9 @@ function mkEmail(item,type){
   if(type==="clarification")return{subject:"Clarification: SDS Request - "+nm,body:j(["Hello,","","Could you confirm the SDS applies specifically to:","","Item: "+lb,"","If there is a more current SDS or updated product code, please share.","","Thank you."])};
   return{subject:"Request for SDS - "+nm,body:j(["Hello,","","Please provide the most current Safety Data Sheet (SDS) for:","","Item: "+lb,"","If renamed, discontinued, or replaced, please include updated product info.","","Thank you for your assistance."])};
 }
-
 function openInOutlook(to,subject,body){var ml="mailto:"+encodeURIComponent(to||"")+"?subject="+encodeURIComponent(subject||"")+"&body="+encodeURIComponent(body||"");window.location.href=ml;}
-
 function readExcel(arrayBuffer){try{const wb=XLSX.read(arrayBuffer,{type:"array"});const wsName=wb.SheetNames[0];const ws=wb.Sheets[wsName];return XLSX.utils.sheet_to_csv(ws)}catch(e){return null}}
-
 function Badge({children,cls}){return <span className={"inline-block px-2.5 py-0.5 text-xs font-medium rounded-full "+cls}>{children}</span>}
-
 function Modal({open,onClose,title,children,wide}){
   const ref=useRef();
   useEffect(()=>{if(open)ref.current?.showModal();else ref.current?.close()},[open]);
@@ -335,35 +273,26 @@ function Modal({open,onClose,title,children,wide}){
     </div>
   </dialog>
 }
-
-/* TUTORIAL */
 const TOUR_STEPS=[
   {icon:"\uD83D\uDC4B",title:"Welcome to Notion",desc:"This app helps you track Safety Data Sheet (SDS) requests from vendors. Upload your inventory list, and the system automatically sorts items by status \u2014 so you always know what\u2019s done, what\u2019s in progress, and what still needs attention.",tip:"Let\u2019s take a quick tour to get you started."},
-  {icon:"\uD83D\uDCE4",title:"Upload Your Items",desc:"Click the Upload Items button to import your item list. The app supports Excel (.xlsx, .xls), CSV, TXT, and TSV files.",tip:"The system reads your file and automatically detects which items are completed based on columns like \"SDS\", \"Received\", \"Status\", or \"Done\". Items marked Yes, X, Complete, or with a received date are sorted as Completed.",bullets:["Excel, CSV, TXT, and TSV supported","Auto-detects completed, in progress, and unfinished items","Preview before importing"]},
+  {icon:"\uD83D\uDCE4",title:"Upload Your Items",desc:"Click the Upload Items button to import your item list. The app supports Excel (.xlsx, .xls), CSV, TXT, and TSV files.",tip:"The system reads your file and automatically detects which items are completed based on columns like \"SDS\", \"Received\", \"Status\", or \"Done\".",bullets:["Excel, CSV, TXT, and TSV supported","Auto-detects completed, in progress, and unfinished items","Preview before importing"]},
   {icon:"\uD83D\uDCCA",title:"Understand the Status Board",desc:"Every item is sorted into one of five status categories. The color-coded board and metric cards give you an instant overview.",bullets:["Completed / Done (green) \u2014 SDS received or on file","In Progress (amber) \u2014 Request sent, awaiting response","Needs Attention (rose) \u2014 Missing info, no response, or issues","Not Finished (gray) \u2014 Ready to request, not started yet","Queued Emails (blue) \u2014 Drafts ready to send"],tip:"You can manually change any item\u2019s status using the dropdown in the Team Queue table."},
-  {icon:"\u270F\uFE0F",title:"Manage Your Items",desc:"Use the Team Queue table to manage every item. Each row has actions you can take:",bullets:["Change status \u2014 Use the dropdown to move items between categories","Compose \u2014 Generate a vendor email (request, follow-up, or clarification)","Clarify \u2014 Send a clarification email to the vendor","Complete \u2014 Mark an item as done when the SDS is received","+ Add Item \u2014 Manually add a single item at any time"],tip:"Use the search bar and filters to quickly find items by name, vendor, status, or priority."},
-  {icon:"\uD83D\uDCE7",title:"Email Queue & Templates",desc:"When you click Compose on an item, the app generates a professional email using one of three templates:",bullets:["Request \u2014 Initial SDS request to the vendor","Follow-Up \u2014 Polite follow-up on a previous request","Clarification \u2014 Ask the vendor to confirm or update the SDS"],tip:"After composing, click Queue Email to add it to the Email Queue Preview tab. From there you can copy the email, test send, or remove it."},
-  {icon:"\uD83D\uDCBE",title:"Save Your Work",desc:"Your work is auto-saved to your browser every few seconds. You also have manual options:",bullets:["\uD83D\uDCBE Save \u2014 Instantly saves to your browser","Auto-save \u2014 Runs every 2 seconds in the background","\uD83D\uDCC4 Save As File \u2014 Downloads a .json backup file to your computer","\uD83D\uDCC2 Open File \u2014 Opens a previously saved .json project","\u2795 New Project \u2014 Clears everything and starts fresh"],tip:"When you reopen the app, your last session is automatically restored. Use Save As File to keep backups on your computer."},
-  {icon:"\uD83D\uDE80",title:"You\u2019re All Set!",desc:"You now know everything you need to get started. Upload your item list and let the app do the sorting for you.",tip:"You can reopen this tutorial anytime by clicking the ? button in the bottom-right corner of the screen."}
+  {icon:"\u270F\uFE0F",title:"Manage Your Items",desc:"Use the Team Queue table to manage every item.",bullets:["Change status \u2014 Use the dropdown to move items between categories","Compose \u2014 Generate a vendor email","Clarify \u2014 Send a clarification email","Complete \u2014 Mark an item as done","+ Add Item \u2014 Manually add a single item"],tip:"Use the search bar and filters to quickly find items."},
+  {icon:"\uD83D\uDCE7",title:"Email Queue & Templates",desc:"When you click Compose on an item, the app generates a professional email using one of three templates:",bullets:["Request \u2014 Initial SDS request","Follow-Up \u2014 Polite follow-up","Clarification \u2014 Confirm or update"],tip:"After composing, click Queue Email to add it to the Email Queue Preview tab."},
+  {icon:"\uD83D\uDCBE",title:"Save Your Work",desc:"Your work is auto-saved to your browser every few seconds.",bullets:["\uD83D\uDCBE Save \u2014 Instantly saves to your browser","Auto-save \u2014 Runs every 2 seconds","\uD83D\uDCC4 Save As File \u2014 Downloads a .json backup","\uD83D\uDCC2 Open File \u2014 Opens a previously saved project","\u2795 New Project \u2014 Clears everything"],tip:"Use Save As File to keep backups on your computer."},
+  {icon:"\uD83D\uDE80",title:"You\u2019re All Set!",desc:"You now know everything you need to get started.",tip:"You can reopen this tutorial anytime by clicking the ? button."}
 ];
-
 function Tour({open,onClose}){
   const[step,setStep]=useState(0);
-  const s=TOUR_STEPS[step];
-  const isLast=step===TOUR_STEPS.length-1;
-  const isFirst=step===0;
+  const s=TOUR_STEPS[step];const isLast=step===TOUR_STEPS.length-1;const isFirst=step===0;
   const close=()=>{markTourSeen();setStep(0);onClose()};
   if(!open)return null;
   return(
     <div className="fixed inset-0 z-50 flex items-center justify-center" style={{background:"rgba(0,0,0,0.5)"}}>
       <div className="tour-fade bg-white rounded-3xl shadow-2xl w-[580px] max-w-[95vw] overflow-hidden" key={step}>
         <div className="bg-gradient-to-r from-indigo-600 via-blue-600 to-indigo-500 px-8 pt-8 pb-6 text-white">
-          <div className="flex items-center justify-between mb-1">
-            <span className="text-sm font-medium opacity-80">{"Step "+(step+1)+" of "+TOUR_STEPS.length}</span>
-            {!isLast&&<button onClick={close} className="text-sm opacity-70 hover:opacity-100 transition-opacity">Skip tutorial</button>}
-          </div>
-          <div className="text-4xl mt-3 mb-2">{s.icon}</div>
-          <h2 className="text-2xl font-semibold">{s.title}</h2>
+          <div className="flex items-center justify-between mb-1"><span className="text-sm font-medium opacity-80">{"Step "+(step+1)+" of "+TOUR_STEPS.length}</span>{!isLast&&<button onClick={close} className="text-sm opacity-70 hover:opacity-100 transition-opacity">Skip tutorial</button>}</div>
+          <div className="text-4xl mt-3 mb-2">{s.icon}</div><h2 className="text-2xl font-semibold">{s.title}</h2>
         </div>
         <div className="px-8 py-6">
           <p className="text-slate-700 leading-relaxed">{s.desc}</p>
@@ -382,9 +311,10 @@ function Tour({open,onClose}){
     </div>
   );
 }
-
+/* Relative time helper */
+function relTime(d){const s=Math.floor((Date.now()-d.getTime())/1000);if(s<60)return"Just now";if(s<3600)return Math.floor(s/60)+"m ago";if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago"}
 /* MAIN APP */
-function App({user}){
+function App(){
   const saved=loadSaved();
   const[items,setItems]=useState(saved?.items||[]);
   const[queue,setQueue]=useState(saved?.queue||[]);
@@ -404,20 +334,27 @@ function App({user}){
   const[histLen,setHistLen]=useState(0);
   const[futLen,setFutLen]=useState(0);
   const skipHistoryRef=useRef(false);
-  const[syncing,setSyncing]=useState(false);
-  const[cloudStatus,setCloudStatus]=useState("");
+  /* Activity Log for Live Dashboard */
+  const[activityLog,setActivityLog]=useState([{id:1,type:'info',text:'Dashboard initialized',time:new Date()}]);
+  const actIdRef=useRef(2);
+  const addActivity=(type,text)=>{setActivityLog(p=>[{id:actIdRef.current++,type,text,time:new Date()},...p].slice(0,50))};
+  /* Live Clock */
+  const[liveClock,setLiveClock]=useState(new Date());
+  useEffect(()=>{const t=setInterval(()=>setLiveClock(new Date()),1000);return()=>clearInterval(t)},[]);
+
   useEffect(()=>{const hk=e=>{if(e.key==="Escape"&&qaOpen)setQaOpen(false)};document.addEventListener("keydown",hk);return()=>document.removeEventListener("keydown",hk)},[qaOpen]);
   useEffect(()=>{if(skipHistoryRef.current){skipHistoryRef.current=false;return;}if(items.length===0&&historyRef.current.length===0)return;const last=historyRef.current[historyRef.current.length-1];if(last&&JSON.stringify(last)===JSON.stringify(items))return;historyRef.current.push(JSON.parse(JSON.stringify(items)));if(historyRef.current.length>31)historyRef.current.splice(0,historyRef.current.length-31);futureRef.current=[];setHistLen(historyRef.current.length);setFutLen(0);},[items]);
   const doUndo=()=>{if(historyRef.current.length<2)return;const cur=historyRef.current.pop();futureRef.current.push(cur);const prev=historyRef.current[historyRef.current.length-1];skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(prev)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Undo applied");};
   const doRedo=()=>{if(futureRef.current.length===0)return;const next=futureRef.current.pop();historyRef.current.push(next);skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(next)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Redo applied");};
-  useEffect(()=>{const hk2=e=>{if((e.ctrlKey||e.metaKey)&&e.key==="z"&&!e.shiftKey){e.preventDefault();if(historyRef.current.length<2)return;const cur=historyRef.current.pop();futureRef.current.push(cur);const prev=historyRef.current[historyRef.current.length-1];skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(prev)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Undo applied");}if((e.ctrlKey||e.metaKey)&&(e.key==="y"||(e.key==="z"&&e.shiftKey))){e.preventDefault();if(futureRef.current.length===0)return;const next=futureRef.current.pop();historyRef.current.push(next);skipHistoryRef.current=true;setItems(JSON.parse(JSON.stringify(next)));setHistLen(historyRef.current.length);setFutLen(futureRef.current.length);setNotice("Redo applied");}};document.addEventListener("keydown",hk2);return()=>document.removeEventListener("keydown",hk2)},[]);
+  useEffect(()=>{const hk2=e=>{if((e.ctrlKey||e.metaKey)&&e.key==="z"&&!e.shiftKey){e.preventDefault();doUndo();}if((e.ctrlKey||e.metaKey)&&(e.key==="y"||(e.key==="z"&&e.shiftKey))){e.preventDefault();doRedo();}};document.addEventListener("keydown",hk2);return()=>document.removeEventListener("keydown",hk2)},[]);
+
   const uniqueVendors=useMemo(()=>[...new Set(items.map(i=>i.vendor).filter(Boolean))].sort(),[items]);
   const toggleSort=col=>{if(sortBy===col)setSortDir(d=>d==="asc"?"desc":"asc");else{setSortBy(col);setSortDir("asc")}};
   const clearFilters=()=>{setQuery("");setStF("All");setPrF("All");setVnF("All");setSortBy("");setSortDir("asc")};
   const staleCount=useMemo(()=>{const now=Date.now();const wk=7*24*60*60*1000;return items.filter(i=>{if(i.status==="Completed")return false;if(!i.lastContact)return true;const d=new Date(i.lastContact);return isNaN(d.getTime())||now-d.getTime()>wk}).length},[items]);
   const overdueCount=useMemo(()=>{const today=new Date().toISOString().slice(0,10);return items.filter(i=>i.status!=="Completed"&&i.followUpDate&&i.followUpDate<today).length},[items]);
+
   const[notice,setNotice]=useState(saved?.items?.length?"Your last session has been restored. Auto-save is on.":"Welcome! Upload a file or add items to get started. Auto-save is on.");
-  useEffect(()=>{if(!user)return;cloudLoadItems(user.id).then(cloudItems=>{if(cloudItems&&cloudItems.length){setItems(cloudItems);setNotice("Loaded "+cloudItems.length+" items from cloud.");setCloudStatus("Synced");}else{setCloudStatus("Local only")}}).catch(()=>{setCloudStatus("Offline")})},[]); 
   const[addOpen,setAddOpen]=useState(false);
   const[compOpen,setCompOpen]=useState(false);
   const[uplOpen,setUplOpen]=useState(false);
@@ -447,33 +384,31 @@ function App({user}){
   const[bulkSubj,setBulkSubj]=useState("");
   const[bulkBod,setBulkBod]=useState("");
 
-
-  /* Auto-save every 2 seconds when data changes */
+  /* Auto-save every 2s - localStorage only */
   useEffect(()=>{
     const t=setTimeout(()=>{
       const ts=getTime();
       saveToStorage({items,queue,savedAt:ts});
       setLastSaved(ts);
       setAutoSaveLabel("Auto-saved: "+ts);
-      if(user&&items.length){setSyncing(true);cloudSaveItems(user.id,items).then(()=>{setCloudStatus("Synced");setSyncing(false)}).catch(()=>{setCloudStatus("Sync failed");setSyncing(false)})}
     },2000);
     return()=>clearTimeout(t);
   },[items,queue]);
 
-  /* Manual save */
   const doSave=useCallback((itms,q)=>{const ts=getTime();saveToStorage({items:itms,queue:q,savedAt:ts});setLastSaved(ts);setAutoSaveLabel("Saved: "+ts);setNotice("Project saved at "+ts)},[]);
-
-      useEffect(()=>{try{localStorage.setItem("sds_vendor_dir",JSON.stringify(vendorDir))}catch(e){}},[vendorDir]);
+  useEffect(()=>{try{localStorage.setItem("sds_vendor_dir",JSON.stringify(vendorDir))}catch(e){}},[vendorDir]);
   const addDirEntry=()=>{if(!dirVendor.trim()||!dirEmail.trim())return;setVendorDir(p=>({...p,[dirVendor.trim()]:dirEmail.trim()}));setDirVendor("");setDirEmail("");setNotice("Added "+dirVendor.trim()+" to vendor directory.")};
   const removeDirEntry=(v)=>{setVendorDir(p=>{const n={...p};delete n[v];return n})};
   const lookupVendorEmail=(vn)=>{if(!vn)return"";const vl=vn.toLowerCase();for(const[k,v] of Object.entries(vendorDir)){if(k.toLowerCase()===vl||vl.indexOf(k.toLowerCase())>=0||k.toLowerCase().indexOf(vl)>=0)return v}return""};
-  const applyMapping=()=>{var fk={code:["itemcode","code","sku","itemnumber","itemno","item","internalid","no","number","acmecode","acme","catalog","catalognumber","part","partnumber","upc","itemnum","plu","id"],name:["displayname","itemname","name","description","desc","itemdescription","productdescription","productname","product","title","chemical","chemicalname"],vendor:["preferredvendor","vendor","supplier","manufacturer","mfg","mfr","manufacturername","suppliername","company","brand","vendorname"],email:["vendoremail","email","supplieremail","manufactureremail","contactemail","emailaddress","contact"],status:["sdsavailable","status","sdsstatus","stage","state","sds","sdsonfile","sdsfound","sdsreceived","havesds","received","complete","completed","done","onfile","found"],owner:["owner","assignedto","buyer","assignee","rep","person","who","team"],notes:["notes","comment","comments","note","remarks","detail","details"]};var mapped=rawRows.map(function(row,i){var get=function(field){var cm=colMap[field];if(cm&&cm!=="auto"){var nk=cm.toLowerCase().replace(/[^a-z0-9]/g,"");return row[nk]!=null?String(row[nk]).trim():""}var keys=fk[field]||[];for(var ki=0;ki<keys.length;ki++){var v=row[keys[ki]];if(v!=null&&String(v).trim())return String(v).trim()}return""};var st=autoSt(row);return{id:items.length+i+1,itemCode:get("code")||("UPLOAD-"+(items.length+i+1)),itemName:get("name")||"Uploaded Item",vendor:get("vendor")||"Unknown Vendor",vendorEmail:get("email")||lookupVendorEmail(get("vendor")),status:st,priority:autoPr(row,st),lastContact:"",owner:get("owner")||"Team",documentName:"",notes:get("notes")||"Imported."}});setPrev(mapped);setMapOpen(false);setUplOpen(true);var vnd=[...new Set(mapped.map(function(x){return x.vendor}).filter(function(v){return v&&v!=="Unknown Vendor"}))].sort();var vMsg=vnd.length?(" Vendors: "+(vnd.length<=5?vnd.join(", "):vnd.slice(0,5).join(", ")+" + "+(vnd.length-5)+" more")):"";setNotice("Mapped "+mapped.length+" items."+vMsg)};
+
+  const applyMapping=()=>{var fk={code:CODE_KEYS,name:NAME_KEYS,vendor:VEND_KEYS,email:EMAIL_KEYS,status:STATUS_KEYS,owner:OWNER_KEYS,notes:NOTE_KEYS};var mapped=rawRows.map(function(row,i){var get=function(field){var cm=colMap[field];if(cm&&cm!=="auto"){var nk=cm.toLowerCase().replace(/[^a-z0-9]/g,"");return row[nk]!=null?String(row[nk]).trim():""}var keys=fk[field]||[];for(var ki=0;ki<keys.length;ki++){var v=row[keys[ki]];if(v!=null&&String(v).trim())return String(v).trim()}return""};var st=autoSt(row);return{id:items.length+i+1,itemCode:get("code")||("UPLOAD-"+(items.length+i+1)),itemName:get("name")||"Uploaded Item",vendor:get("vendor")||"Unknown Vendor",vendorEmail:get("email")||lookupVendorEmail(get("vendor")),status:st,priority:autoPr(row,st),lastContact:"",owner:get("owner")||"Team",documentName:"",notes:get("notes")||"Imported."}});setPrev(mapped);setMapOpen(false);setUplOpen(true);setNotice("Mapped "+mapped.length+" items.")};
+
   const vendorSummary=useMemo(()=>{var vc={};prev.forEach(function(item){var v=item.vendor||"Unknown";vc[v]=(vc[v]||0)+1});return Object.entries(vc).sort(function(a,b){return b[1]-a[1]})},[prev]);
   const vendorGroups=useMemo(function(){var g={};items.forEach(function(it){if(it.status==="Completed")return;var v=it.vendor||"Unknown";if(!g[v])g[v]={vendor:v,email:it.vendorEmail||lookupVendorEmail(v)||"",items:[]};g[v].items.push(it)});return Object.values(g).sort(function(a,b){return b.items.length-a.items.length})},[items,vendorDir]);
-  const mkBulkEmail=function(gr){var ls=gr.items.map(function(it){return "  - "+it.itemName+" ("+it.itemCode+")"}).join("\n");return{subject:"SDS Request - "+gr.items.length+" Items from "+gr.vendor,body:"Hello,\n\nWe are requesting the most current Safety Data Sheets (SDS) for the following "+gr.items.length+" items:\n\n"+ls+"\n\nPlease provide the SDS documents at your earliest convenience. If any items have been discontinued or replaced, kindly let us know.\n\nThank you."}};
+  const mkBulkEmail=function(gr){var ls=gr.items.map(function(it){return "  - "+it.itemName+" ("+it.itemCode+")"}).join("\n");return{subject:"SDS Request - "+gr.items.length+" Items from "+gr.vendor,body:"Hello,\n\nWe are requesting the most current Safety Data Sheets (SDS) for the following "+gr.items.length+" items:\n\n"+ls+"\n\nPlease provide the SDS documents at your earliest convenience.\n\nThank you."}};
   const openBulk=function(gr){if(!gr.email){setNotice("Add email for "+gr.vendor+" in Vendor Directory first.");return}var e=mkBulkEmail(gr);setBulkVendor(gr);setBulkSubj(e.subject);setBulkBod(e.body);setBulkOpen(true)};
-  const doBulkQueue=function(){if(!bulkVendor)return;var qid=topId(queue)+1;setQueue(function(p){return[{id:qid,to:bulkVendor.email,vendor:bulkVendor.vendor,itemCode:bulkVendor.items.length+" items",itemName:"Bulk SDS Request",type:"bulk",subject:bulkSubj,body:bulkBod,status:"Queued",queuedAt:getTime()}].concat(p)});setItems(function(p){return p.map(function(it){var m=bulkVendor.items.some(function(bi){return bi.id===it.id});if(m)return Object.assign({},it,{status:"In Progress",lastContact:getDate(),followUpDate:(function(){var d=new Date();d.setDate(d.getDate()+3);return d.toISOString().slice(0,10)})(),notes:[it.notes,getDate()+": Bulk SDS request queued."].filter(Boolean).join("\n")});return it})});setBulkOpen(false);setNotice("Queued bulk email for "+bulkVendor.vendor+" ("+bulkVendor.items.length+" items).")};
-  function canEmail(item){return item.vendorEmail && item.vendorEmail.trim() !== "";}
+  const doBulkQueue=function(){if(!bulkVendor)return;var qid=topId(queue)+1;setQueue(function(p){return[{id:qid,to:bulkVendor.email,vendor:bulkVendor.vendor,itemCode:bulkVendor.items.length+" items",itemName:"Bulk SDS Request",type:"bulk",subject:bulkSubj,body:bulkBod,status:"Queued",queuedAt:getTime()}].concat(p)});setItems(function(p){return p.map(function(it){var m=bulkVendor.items.some(function(bi){return bi.id===it.id});if(m)return Object.assign({},it,{status:"In Progress",lastContact:getDate(),followUpDate:(function(){var d=new Date();d.setDate(d.getDate()+3);return d.toISOString().slice(0,10)})(),notes:[it.notes,getDate()+": Bulk SDS request queued."].filter(Boolean).join("\n")});return it})});setBulkOpen(false);addActivity('email','Bulk email queued for '+bulkVendor.vendor+' ('+bulkVendor.items.length+' items)');setNotice("Queued bulk email for "+bulkVendor.vendor)};
+  function canEmail(item){return item.vendorEmail&&item.vendorEmail.trim()!=="";}
   const highlightMatch=(text,q)=>{if(!q||!text)return String(text||"");const s=String(text);const lower=s.toLowerCase();const ql=q.toLowerCase();const parts=[];let last=0;let idx=lower.indexOf(ql,last);while(idx>=0){if(idx>last)parts.push(s.slice(last,idx));parts.push(React.createElement("mark",{className:"hl",key:idx},s.slice(idx,idx+ql.length)));last=idx+ql.length;idx=lower.indexOf(ql,last);}if(last<s.length)parts.push(s.slice(last));return parts.length>1?React.createElement("span",null,...parts):s;};
   const filtered=useMemo(()=>items.filter(it=>{const h=[it.itemCode,it.itemName,it.vendor,it.vendorEmail,it.owner,it.notes,it.status].join(" ").toLowerCase();return has(h,query.toLowerCase())&&(stF==="All"||it.status===stF)&&(prF==="All"||it.priority===prF)&&(vnF==="All"||it.vendor===vnF)}),[items,query,stF,prF,vnF]);
   const sorted=useMemo(()=>{if(!sortBy)return filtered;return[...filtered].sort((a,b)=>{let va=a[sortBy]||"",vb=b[sortBy]||"";if(typeof va==="string")va=va.toLowerCase();if(typeof vb==="string")vb=vb.toLowerCase();if(va<vb)return sortDir==="asc"?-1:1;if(va>vb)return sortDir==="asc"?1:-1;return 0})},[filtered,sortBy,sortDir]);
@@ -481,42 +416,113 @@ function App({user}){
   const safePage=Math.min(curPage,totalPages);
   const paged=sorted.slice((safePage-1)*pageSize,safePage*pageSize);
   useEffect(()=>{setCurPage(1)},[query,stF,prF,vnF,pageSize,sortBy,sortDir]);
-
   const met=useMemo(()=>{const c=s=>items.filter(i=>i.status===s).length;const done=c("Completed");return{total:items.length,nf:c("Not Finished"),ip:c("In Progress"),na:c("Needs Attention"),done,pct:items.length?Math.round(done/items.length*100):0}},[items]);
-
   const compose=(item,t)=>{const e=mkEmail(item,t);setActive(item);setEType(t);setSubj(e.subject);setBod(e.body);setCompOpen(true)};
   const swapT=t=>{if(!active)return;const e=mkEmail(active,t);setEType(t);setSubj(e.subject);setBod(e.body)};
-  const setSt=(id,s)=>setItems(p=>p.map(i=>i.id===id?{...i,status:s}:i));
-  const doQueue=()=>{if(!active)return;const qid=topId(queue)+1;const lab=eType==="followup"?"Follow-up":eType==="clarification"?"Clarification":"SDS request";setQueue(p=>[{id:qid,to:active.vendorEmail,vendor:active.vendor,itemCode:active.itemCode,itemName:active.itemName,type:eType,subject:subj,body:bod,status:"Queued",queuedAt:getTime()},...p]);setItems(p=>p.map(i=>i.id===active.id?{...i,status:"In Progress",lastContact:getDate(),notes:[i.notes,getDate()+": "+lab+" queued."].filter(Boolean).join(NL)}:i));setCompOpen(false);setNotice("Queued email for "+active.itemCode+".")};
-  const testSend=id=>{const m=queue.find(x=>x.id===id);if(!m)return;setQueue(p=>p.map(x=>x.id===id?{...x,status:"Sending..."}:x));emailjs.send("service_s7fj4yt","template_s1azx1s",{to_email:m.to,subject:m.subject,message:m.body}).then(()=>{setQueue(p=>p.map(x=>x.id===id?{...x,status:"Sent",sentAt:getTime()}:x));setNotice("Email sent to "+m.to)}).catch(err=>{setQueue(p=>p.map(x=>x.id===id?{...x,status:"Failed"}:x));setNotice("Send failed: "+(err.text||err.message||"Unknown error"))})};
+  const setSt=(id,s)=>{const it=items.find(x=>x.id===id);setItems(p=>p.map(i=>i.id===id?{...i,status:s}:i));addActivity(s==='Completed'?'complete':s==='Needs Attention'?'attention':'progress',(it?it.itemCode:'Item')+' \u2192 '+s)};
+  const doQueue=()=>{if(!active)return;const qid=topId(queue)+1;const lab=eType==="followup"?"Follow-up":eType==="clarification"?"Clarification":"SDS request";setQueue(p=>[{id:qid,to:active.vendorEmail,vendor:active.vendor,itemCode:active.itemCode,itemName:active.itemName,type:eType,subject:subj,body:bod,status:"Queued",queuedAt:getTime()},...p]);setItems(p=>p.map(i=>i.id===active.id?{...i,status:"In Progress",lastContact:getDate(),notes:[i.notes,getDate()+": "+lab+" queued."].filter(Boolean).join(NL)}:i));setCompOpen(false);addActivity('email','Email queued for '+active.itemCode+' ('+lab+')');setNotice("Queued email for "+active.itemCode+".")};
+  const testSend=id=>{const m=queue.find(x=>x.id===id);if(!m)return;setQueue(p=>p.map(x=>x.id===id?{...x,status:"Sending..."}:x));emailjs.send("service_s7fj4yt","template_s1azx1s",{to_email:m.to,subject:m.subject,message:m.body}).then(()=>{setQueue(p=>p.map(x=>x.id===id?{...x,status:"Sent",sentAt:getTime()}:x));addActivity('email','Email sent to '+m.to);setNotice("Email sent to "+m.to)}).catch(err=>{setQueue(p=>p.map(x=>x.id===id?{...x,status:"Failed"}:x));setNotice("Send failed: "+(err.text||err.message||"Unknown error"))})};
   const rmQ=id=>{setQueue(p=>p.filter(m=>m.id!==id));setNotice("Removed.")};
   const cpQ=m=>{try{navigator.clipboard.writeText("To: "+m.to+NL+"Subject: "+m.subject+NL+NL+m.body);setNotice("Copied!")}catch(e){setNotice("Copy failed.")}};
-  const addItemFn=()=>{if(!ni.itemCode.trim()||!ni.itemName.trim()||!ni.vendor.trim()){setNotice("Need code, name, vendor.");return}const st=ni.vendorEmail?"Not Finished":"Needs Attention";setItems(p=>[{id:topId(p)+1,...ni,status:st,lastContact:"",documentName:"",followUpDate:""},...p]);setAddOpen(false);setNi({itemCode:"",itemName:"",vendor:"",vendorEmail:"",owner:"",priority:"Medium",notes:""});setNotice("Added "+ni.itemCode+".")};
-  const markDone=id=>{setItems(p=>p.map(i=>i.id===id?{...i,status:"Completed",documentName:i.documentName||i.itemCode+"_SDS.pdf",notes:[i.notes,getDate()+": SDS received."].filter(Boolean).join(NL)}:i));setNotice("Completed.")};
+  const addItemFn=()=>{if(!ni.itemCode.trim()||!ni.itemName.trim()||!ni.vendor.trim()){setNotice("Need code, name, vendor.");return}const st=ni.vendorEmail?"Not Finished":"Needs Attention";setItems(p=>[{id:topId(p)+1,...ni,status:st,lastContact:"",documentName:"",followUpDate:""},...p]);setAddOpen(false);addActivity('info','New item added: '+ni.itemCode);setNi({itemCode:"",itemName:"",vendor:"",vendorEmail:"",owner:"",priority:"Medium",notes:""});setNotice("Added "+ni.itemCode+".")};
+  const markDone=id=>{const it=items.find(x=>x.id===id);setItems(p=>p.map(i=>i.id===id?{...i,status:"Completed",documentName:i.documentName||i.itemCode+"_SDS.pdf",notes:[i.notes,getDate()+": SDS received."].filter(Boolean).join(NL)}:i));addActivity('complete',(it?it.itemCode:'Item')+' marked as Completed');setNotice("Completed.")};
   const doExport=()=>{const cols=["id","itemCode","itemName","vendor","vendorEmail","status","lastContact","followUpDate","owner","priority","documentName","notes"];const esc=v=>'"'+String(v==null?"":v).replace(/"/g,'""')+'"';const rows=(sorted.length?sorted:items).map(r=>cols.map(c=>esc(r[c])).join(","));const csv=[cols.join(","),...rows].join(NL);const blob=new Blob([csv],{type:"text/csv"});const u=URL.createObjectURL(blob);const a=document.createElement("a");a.href=u;a.download="sds-"+getDate()+".csv";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setNotice("Exported.")};
-  const runTest=()=>{if(!items.length){setNotice("Add items first.");return}const it=items.find(r=>r.status==="Not Finished")||items[0];const e=mkEmail(it,"request");const id=topId(queue)+1;setQueue(p=>[{id,to:it.vendorEmail,vendor:it.vendor,itemCode:it.itemCode,itemName:it.itemName,type:"request",subject:e.subject,body:e.body,status:"Queued",queuedAt:getTime()},...p]);setItems(p=>p.map(r=>r.id===it.id?{...r,status:"In Progress",lastContact:getDate()}:r));setNotice("Queued test for "+it.itemCode+".")};
-
+  const runTest=()=>{if(!items.length){setNotice("Add items first.");return}const it=items.find(r=>r.status==="Not Finished")||items[0];const e=mkEmail(it,"request");const id=topId(queue)+1;setQueue(p=>[{id,to:it.vendorEmail,vendor:it.vendor,itemCode:it.itemCode,itemName:it.itemName,type:"request",subject:e.subject,body:e.body,status:"Queued",queuedAt:getTime()},...p]);setItems(p=>p.map(r=>r.id===it.id?{...r,status:"In Progress",lastContact:getDate()}:r));addActivity('email','Test email queued for '+it.itemCode);setNotice("Queued test for "+it.itemCode+".")};
   const processUpload=(csvText,fileName)=>{const parsed=parseCsv(csvText);const m=mapRows(parsed.rows,items.length);setDetectedCols(parsed.cols);if(!m.length){setNotice("No items found in "+fileName+".");return}setPrev(m);setRawRows(parsed.rows);setRawCols(parsed.cols);setColMap({code:"auto",name:"auto",vendor:"auto",email:"auto",status:"auto",owner:"auto",notes:"auto"});setNotice("Scanned "+m.length+" items from "+fileName+". Review column mapping.");setMapOpen(true)};
-  const onUpload=ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;const name=f.name.toLowerCase();const isExcel=name.endsWith(".xlsx")||name.endsWith(".xls")||name.endsWith(".xlsm")||name.endsWith(".xlsb");if(isExcel){const rd=new FileReader();rd.onload=()=>{const csv=readExcel(new Uint8Array(rd.result));if(!csv){setNotice("Could not read Excel file.");return}processUpload(csv,f.name)};rd.onerror=()=>{setNotice("Error reading file. Make sure it is not open in another program.")};rd.readAsArrayBuffer(f)}else{const rd=new FileReader();rd.onload=()=>{processUpload(rd.result,f.name)};rd.onerror=()=>{setNotice("Error reading file.")};rd.readAsText(f)}ev.target.value=""};
-  const doImport=()=>{if(!prev.length)return;setItems(p=>[...prev,...p]);setNotice("Imported "+prev.length+" items from "+[...new Set(prev.map(function(x){return x.vendor}).filter(function(v){return v&&v!=="Unknown Vendor"}))].length+" vendors.");setPrev([]);setUplOpen(false);setDetectedCols([])};
-
-  const saveAsFile=()=>{var vg={};items.forEach(function(it){var v=it.vendor||"Unknown";if(!vg[v])vg[v]=[];vg[v].push(it)});var vkeys=Object.keys(vg).sort();var cD=items.filter(function(i){return i.status==="Completed"}).length;var cI=items.filter(function(i){return i.status==="In Progress"}).length;var cA=items.filter(function(i){return i.status==="Needs Attention"}).length;var cN=items.filter(function(i){return i.status==="Not Finished"}).length;var pct=items.length?Math.round(cD/items.length*100):0;var css='*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,-apple-system,sans-serif;background:#f8fafc;padding:32px;color:#1e293b}.wrap{max-width:1100px;margin:0 auto}.hdr{background:linear-gradient(135deg,#1e293b,#334155);color:#fff;padding:32px;border-radius:16px;margin-bottom:24px}.hdr h1{font-size:28px;margin-bottom:8px}.hdr p{opacity:.8;font-size:14px}.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}.card{padding:16px;border-radius:12px;border:1px solid #e2e8f0;background:#fff;text-align:center}.card .num{font-size:28px;font-weight:700}.card .lab{font-size:12px;color:#64748b;margin-top:4px}.cd{border-color:#a7f3d0;background:#ecfdf5}.ci{border-color:#fde68a;background:#fffbeb}.ca{border-color:#fecaca;background:#fef2f2}.cn{border-color:#e2e8f0;background:#f8fafc}.vnd{margin-bottom:20px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#fff}.vh{background:#f1f5f9;padding:14px 20px;font-size:16px;font-weight:600;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center}.vh .tg span{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-left:6px}.td2{background:#d1fae5;color:#065f46}.ti2{background:#fef3c7;color:#92400e}.ta2{background:#fee2e2;color:#991b1b}.tn2{background:#f1f5f9;color:#475569}.sc{padding:0 20px}.st{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:12px 0 6px;border-bottom:1px solid #f1f5f9}.st.sd{color:#059669}.st.si{color:#d97706}.st.sa{color:#dc2626}.st.sn{color:#64748b}table{width:100%;border-collapse:collapse;font-size:13px}th{text-align:left;padding:8px 10px;font-weight:600;color:#64748b;font-size:11px;text-transform:uppercase;letter-spacing:.3px}td{padding:8px 10px;border-top:1px solid #f1f5f9}.bg{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600}.bd{background:#d1fae5;color:#065f46}.bi{background:#fef3c7;color:#92400e}.ba{background:#fee2e2;color:#991b1b}.bn{background:#f1f5f9;color:#475569}.ft{text-align:center;padding:20px;font-size:12px;color:#94a3b8;margin-top:16px}';var h='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Notion Summary - '+getDate()+'</title><style>'+css+'</style></head><body><div class="wrap">';h+='<div class="hdr"><h1>Notion - SDS Summary Report</h1><p>Generated: '+getTime()+' | Total Items: '+items.length+' | Vendors: '+vkeys.length+' | Coverage: '+pct+'%</p></div>';h+='<div class="cards">';h+='<div class="card cd"><div class="num">'+cD+'</div><div class="lab">Completed</div></div>';h+='<div class="card ci"><div class="num">'+cI+'</div><div class="lab">In Progress</div></div>';h+='<div class="card ca"><div class="num">'+cA+'</div><div class="lab">Needs Attention</div></div>';h+='<div class="card cn"><div class="num">'+cN+'</div><div class="lab">Not Finished</div></div>';h+='</div>';var ord=["Completed","In Progress","Needs Attention","Not Finished"];var bcm={"Completed":"bd","In Progress":"bi","Needs Attention":"ba","Not Finished":"bn"};var scm={"Completed":"sd","In Progress":"si","Needs Attention":"sa","Not Finished":"sn"};var tcm={"Completed":"td2","In Progress":"ti2","Needs Attention":"ta2","Not Finished":"tn2"};for(var vi=0;vi<vkeys.length;vi++){var vn=vkeys[vi];var vit=vg[vn];var vc={};ord.forEach(function(s){vc[s]=vit.filter(function(x){return x.status===s})});h+='<div class="vnd"><div class="vh"><span>'+vn+'</span><span class="tg">';ord.forEach(function(s){if(vc[s].length)h+='<span class="'+tcm[s]+'">'+s+': '+vc[s].length+'</span>'});h+='</span></div>';ord.forEach(function(s){if(!vc[s].length)return;h+='<div class="sc"><div class="st '+scm[s]+'">'+s+' ('+vc[s].length+')</div>';h+='<table><thead><tr><th>Code</th><th>Item Name</th><th>Email</th><th>Priority</th><th>Last Contact</th><th>Notes</th></tr></thead><tbody>';vc[s].forEach(function(it){var nt=(it.notes||'').replace(/</g,'&lt;').substring(0,80);h+='<tr><td><strong>'+it.itemCode+'</strong></td><td>'+it.itemName+'</td><td>'+(it.vendorEmail||'Missing')+'</td><td><span class="bg '+bcm[s]+'">'+it.priority+'</span></td><td>'+(it.lastContact||'-')+'</td><td>'+nt+'</td></tr>'});h+='</tbody></table></div>'});h+='</div>'}h+='<div class="ft">Notion \\u2022 Summary Report \\u2022 '+getDate()+'</div></div></body></html>';var blob=new Blob([h],{type:"text/html"});var u=URL.createObjectURL(blob);var a=document.createElement("a");a.href=u;a.download="Notion_Summary_"+getDate()+".html";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setNotice("Summary report saved as Notion_Summary_"+getDate()+".html")};
-  const openFile=ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d.items){setItems(d.items);setQueue(d.queue||[]);setLastSaved(d.savedAt||"");setNotice("Project loaded: "+d.items.length+" items, "+(d.queue?.length||0)+" queued emails.")}else{setNotice("Invalid project file.")}}catch(e){setNotice("Could not read file.")}};rd.readAsText(f);ev.target.value=""};
-  const newProject=()=>{setItems([]);setQueue([]);setLastSaved("");setAutoSaveLabel("");localStorage.removeItem(STORE_KEY);setNewProjOpen(false);setTab("queue");setNotice("New project started.")};
-
+  const onUpload=ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;const name=f.name.toLowerCase();const isExcel=name.endsWith(".xlsx")||name.endsWith(".xls")||name.endsWith(".xlsm")||name.endsWith(".xlsb");if(isExcel){const rd=new FileReader();rd.onload=()=>{const csv=readExcel(new Uint8Array(rd.result));if(!csv){setNotice("Could not read Excel file.");return}processUpload(csv,f.name)};rd.onerror=()=>{setNotice("Error reading file.")};rd.readAsArrayBuffer(f)}else{const rd=new FileReader();rd.onload=()=>{processUpload(rd.result,f.name)};rd.onerror=()=>{setNotice("Error reading file.")};rd.readAsText(f)}ev.target.value=""};
+  const doImport=()=>{if(!prev.length)return;setItems(p=>[...prev,...p]);addActivity('info','Imported '+prev.length+' items');setNotice("Imported "+prev.length+" items.");setPrev([]);setUplOpen(false);setDetectedCols([])};
+  const saveAsFile=()=>{var d=JSON.stringify({items,queue,savedAt:getTime()});var blob=new Blob([d],{type:"application/json"});var u=URL.createObjectURL(blob);var a=document.createElement("a");a.href=u;a.download="Notion_"+getDate()+".json";document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(u);setNotice("Project saved as file.")};
+  const openFile=ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const d=JSON.parse(rd.result);if(d.items){setItems(d.items);setQueue(d.queue||[]);setLastSaved(d.savedAt||"");addActivity('info','Project loaded: '+d.items.length+' items');setNotice("Project loaded: "+d.items.length+" items.")}else{setNotice("Invalid project file.")}}catch(e){setNotice("Could not read file.")}};rd.readAsText(f);ev.target.value=""};
+  const newProject=()=>{setItems([]);setQueue([]);setLastSaved("");setAutoSaveLabel("");localStorage.removeItem(STORE_KEY);setNewProjOpen(false);setTab("queue");addActivity('info','New project started');setNotice("New project started.")};
   const Btn=({children,onClick,variant,size,disabled,cls})=>{const base="font-medium rounded-xl transition-colors "+(size==="sm"?"px-3 py-1.5 text-xs":"px-4 py-2 text-sm");const v=variant==="outline"?"border border-slate-200 bg-white text-slate-700 hover:bg-slate-50":variant==="ghost"?"text-slate-600 hover:bg-slate-100":variant==="danger"?"bg-red-600 text-white hover:bg-red-700":"bg-slate-900 text-white hover:bg-slate-800";return <button onClick={onClick} disabled={disabled} className={base+" "+v+" "+(disabled?"opacity-50 cursor-not-allowed":"")+" "+(cls||"")}>{children}</button>};
 
-  const isEmpty=items.length===0&&queue.length===0;
+  /* Chart components */
+  const DonutChart=({met})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||met.total===0)return;
+      cRef.current=new Chart(ref.current,{type:'doughnut',data:{
+        labels:['Completed','In Progress','Needs Attention','Not Finished'],
+        datasets:[{data:[met.done,met.ip,met.na,met.nf],
+          backgroundColor:['#22c55e','#f59e0b','#ef4444','#6366f1'],
+          borderWidth:0,borderRadius:4}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
+          plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:12,font:{size:12}}},
+            tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#cbd5e1',borderColor:'#334155',borderWidth:1}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[met]);
+    return React.createElement('canvas',{ref:ref});
+  };
+  const BarChart=({items:allItems})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||!allItems.length)return;
+      const counts={};allItems.forEach(it=>{const v=it.vendor||'Unknown';counts[v]=(counts[v]||0)+1});
+      const sd=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
+      cRef.current=new Chart(ref.current,{type:'bar',data:{
+        labels:sd.map(s=>s[0].length>15?s[0].slice(0,14)+'\u2026':s[0]),
+        datasets:[{data:sd.map(s=>s[1]),backgroundColor:'#6366f1',borderRadius:6,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#cbd5e1'}},
+          scales:{x:{grid:{color:'#e2e8f0'},ticks:{color:'#64748b',font:{size:11}}},
+            y:{grid:{display:false},ticks:{color:'#334155',font:{size:12}}}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[allItems]);
+    return React.createElement('canvas',{ref:ref});
+  };
+  /* Live Dashboard Chart Components (dark theme) */
+  const LiveDonutChart=({met})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||met.total===0)return;
+      cRef.current=new Chart(ref.current,{type:'doughnut',data:{
+        labels:['Completed','In Progress','Needs Attention','Not Finished'],
+        datasets:[{data:[met.done,met.ip,met.na,met.nf],
+          backgroundColor:['#4ade80','#fbbf24','#fb7185','#a5b4fc'],
+          borderWidth:0,borderRadius:4}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
+          plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:12,font:{size:11}}},
+            tooltip:{backgroundColor:'#0f172a',titleColor:'#f1f5f9',bodyColor:'#cbd5e1',borderColor:'#334155',borderWidth:1}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[met]);
+    return React.createElement('canvas',{ref:ref});
+  };
+  const LiveBarChart=({items:allItems})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||!allItems.length)return;
+      const counts={};allItems.forEach(it=>{const v=it.vendor||'Unknown';counts[v]=(counts[v]||0)+1});
+      const sd=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
+      cRef.current=new Chart(ref.current,{type:'bar',data:{
+        labels:sd.map(s=>s[0].length>15?s[0].slice(0,14)+'\u2026':s[0]),
+        datasets:[{data:sd.map(s=>s[1]),backgroundColor:'#818cf8',borderRadius:6,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#f1f5f9',bodyColor:'#cbd5e1'}},
+          scales:{x:{grid:{color:'rgba(51,65,85,.5)'},ticks:{color:'#94a3b8',font:{size:11}}},
+            y:{grid:{display:false},ticks:{color:'#e2e8f0',font:{size:12}}}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[allItems]);
+    return React.createElement('canvas',{ref:ref});
+  };
+  /* Vendor stats for live dashboard */
+  const liveVendorStats=useMemo(()=>{var vg={};items.forEach(function(it){var v=it.vendor||"Unknown";if(!vg[v])vg[v]={total:0,done:0,ip:0,na:0,nf:0,email:it.vendorEmail||""};vg[v].total++;if(it.status==="Completed")vg[v].done++;else if(it.status==="In Progress")vg[v].ip++;else if(it.status==="Needs Attention")vg[v].na++;else vg[v].nf++;if(!vg[v].email&&it.vendorEmail)vg[v].email=it.vendorEmail});return Object.entries(vg).sort((a,b)=>b[1].total-a[1].total).slice(0,10)},[items]);
 
+  const isEmpty=items.length===0&&queue.length===0;
+  const TAB_LIST=["dashboard","liveDashboard","vendors","queue","emailQueue","attention","templates"];
+  const TAB_LABELS={dashboard:"\uD83D\uDCCA Dashboard",liveDashboard:"\uD83D\uDCE1 Live Dashboard",vendors:"\uD83D\uDCC7 Vendors",queue:"Team Queue",emailQueue:"Email Queue Preview",attention:"Needs Attention",templates:"Templates"};
   return(
     <div className={"min-h-screen p-4 md:p-8 "+(dark?"dark bg-[#0f172a]":"bg-gradient-to-br from-slate-50 via-white to-blue-50")}>
       <Tour open={tourOpen} onClose={()=>setTourOpen(false)}/>
       <button className="help-btn" onClick={()=>setTourOpen(true)} title="Open Tutorial">?</button>
-      <button className="qa-btn" onClick={()=>setQaOpen(!qaOpen)} title="Quick Actions">⚡</button>
+      <button className="qa-btn" onClick={()=>setQaOpen(!qaOpen)} title="Quick Actions">&#9889;</button>
       <button className="dm-toggle" onClick={()=>setDark(d=>!d)}>{dark?"☀ Light":"☾ Dark"}</button>
       <div className={"qa-overlay"+(qaOpen?" open":"")} onClick={()=>setQaOpen(false)}></div>
       <div className={"qa-panel"+(qaOpen?" open":"")}>
-        <div className="qa-hdr"><h2>⚡ Quick Actions</h2><button className="qa-x" onClick={()=>setQaOpen(false)}>✕</button></div>
+        <div className="qa-hdr"><h2>&#9889; Quick Actions</h2><button className="qa-x" onClick={()=>setQaOpen(false)}>✕</button></div>
         <div className="qa-body">
           <div className="qa-sec"><div className="qa-sec-title">At a Glance</div>
             <div className="qa-stats">
@@ -527,37 +533,27 @@ function App({user}){
             </div>
           </div>
           <div className="qa-sec"><div className="qa-sec-title">Alerts</div>
-            {staleCount>0?<div className="qa-alert warn" onClick={()=>{setTab("attention");setQaOpen(false)}}>⚠️ <span>{staleCount} item{staleCount>1?"s":""} with no contact in 7+ days</span><span className="qa-badge">{staleCount}</span></div>:null}
-            {overdueCount>0?<div className="qa-alert danger" onClick={()=>{setTab("dashboard");setQaOpen(false)}}>🚨 <span>{overdueCount} overdue follow-up{overdueCount>1?"s":""}</span><span className="qa-badge">{overdueCount}</span></div>:null}
-            {met.na>0?<div className="qa-alert warn" onClick={()=>{setTab("attention");setQaOpen(false)}}>📋 <span>{met.na} item{met.na>1?"s":""} need attention</span><span className="qa-badge">{met.na}</span></div>:null}
-            {staleCount===0&&overdueCount===0&&met.na===0?<div className="qa-alert ok">🎉 All clear! No alerts right now.</div>:null}
+            {staleCount>0?<div className="qa-alert warn" onClick={()=>{setTab("attention");setQaOpen(false)}}>&#9888;&#65039; <span>{staleCount} item{staleCount>1?"s":""} with no contact in 7+ days</span><span className="qa-badge">{staleCount}</span></div>:null}
+            {overdueCount>0?<div className="qa-alert danger" onClick={()=>{setTab("dashboard");setQaOpen(false)}}>&#128680; <span>{overdueCount} overdue follow-up{overdueCount>1?"s":""}</span><span className="qa-badge">{overdueCount}</span></div>:null}
+            {met.na>0?<div className="qa-alert warn" onClick={()=>{setTab("attention");setQaOpen(false)}}>&#128203; <span>{met.na} item{met.na>1?"s":""} need attention</span><span className="qa-badge">{met.na}</span></div>:null}
+            {staleCount===0&&overdueCount===0&&met.na===0?<div className="qa-alert ok">&#127881; All clear! No alerts right now.</div>:null}
           </div>
           <div className="qa-sec"><div className="qa-sec-title">Quick Actions</div>
             <div className="qa-actions">
               <button className="qa-act" onClick={()=>{setAddOpen(true);setQaOpen(false)}}><span className="qa-icon">➕</span><span>Add Item</span></button>
-              <button className="qa-act" onClick={()=>{setUplOpen(true);setQaOpen(false)}}><span className="qa-icon">📂</span><span>Upload File</span></button>
+              <button className="qa-act" onClick={()=>{setQaOpen(false)}}><span className="qa-icon">📂</span><span>Upload File</span></button>
               <button className="qa-act" onClick={()=>{runTest();setQaOpen(false)}}><span className="qa-icon">✉️</span><span>Queue Test</span></button>
               <button className="qa-act" onClick={()=>{doExport();setQaOpen(false)}}><span className="qa-icon">📥</span><span>Export CSV</span></button>
             </div>
           </div>
           <div className="qa-sec"><div className="qa-sec-title">Jump To</div>
             <div className="qa-nav">
-              {["dashboard","vendors","queue","emailQueue","attention","templates"].map(t=><button key={t} className={"qa-nav-btn"+(tab===t?" active":"")} onClick={()=>{setTab(t);setQaOpen(false)}}>{t==="dashboard"?"📊 Dashboard":t==="vendors"?"📇 Vendors":t==="queue"?"Team Queue":t==="emailQueue"?"Email Queue":t==="attention"?"⚠️ Attention":"Templates"}</button>)}
-            </div>
-          </div>
-          <div className="qa-sec"><div className="qa-sec-title">Quick Filters</div>
-            <div className="qa-nav">
-              <button className="qa-nav-btn" onClick={()=>{setStF("Needs Attention");setTab("queue");setQaOpen(false)}}>🔴 Needs Attention</button>
-              <button className="qa-nav-btn" onClick={()=>{setStF("In Progress");setTab("queue");setQaOpen(false)}}>🟡 In Progress</button>
-              <button className="qa-nav-btn" onClick={()=>{setStF("Not Finished");setTab("queue");setQaOpen(false)}}>🟠 Not Finished</button>
-              <button className="qa-nav-btn" onClick={()=>{setStF("Completed");setTab("queue");setQaOpen(false)}}>🟢 Completed</button>
-              <button className="qa-nav-btn" onClick={()=>{clearFilters();setTab("queue");setQaOpen(false)}}>✖ Clear Filters</button>
+              {TAB_LIST.map(t=><button key={t} className={"qa-nav-btn"+(tab===t?" active":"")} onClick={()=>{setTab(t);setQaOpen(false)}}>{TAB_LABELS[t]}</button>)}
             </div>
           </div>
         </div>
       </div>
       <div className="mx-auto max-w-7xl space-y-6">
-
         <div className="rounded-3xl border border-slate-200 bg-white/80 p-6 shadow-sm">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div><h1 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">Notion</h1><p className="mt-2 max-w-3xl text-slate-600">Upload item lists, auto-sort the queue, and track SDS requests from start to finish.</p></div>
@@ -569,7 +565,6 @@ function App({user}){
             </div>
           </div>
         </div>
-
         <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex flex-wrap gap-2">
@@ -581,32 +576,19 @@ function App({user}){
               <Btn variant="outline" onClick={()=>setDirOpen(true)}>&#128231; Vendor Directory</Btn>
               <Btn variant="outline" onClick={function(){setBulkOpen(true);setBulkVendor(null)}}>&#9993; Bulk Email</Btn>
             </div>
-            <div className="text-sm text-slate-500 flex items-center gap-2">{autoSaveLabel?<><span className={"sync-dot "+(syncing?"busy":"ok")}></span>{autoSaveLabel}{cloudStatus&&<span className="ml-2 text-xs text-slate-400">{" | Cloud: "+cloudStatus}</span>}<Btn size="sm" variant="ghost" cls="ml-2 text-xs" onClick={async()=>{await supa.auth.signOut();setNotice("Signed out.")}}>Logout</Btn></>:<><span className="inline-block w-2 h-2 rounded-full bg-slate-300"></span>Not saved yet</>}</div>
+            <div className="text-sm text-slate-500 flex items-center gap-2">{autoSaveLabel?<><span className="inline-block w-2 h-2 rounded-full bg-emerald-500"></span>{autoSaveLabel}</>:<><span className="inline-block w-2 h-2 rounded-full bg-slate-300"></span>Not saved yet</>}</div>
           </div>
         </div>
-
         {notice&&<div className="flex items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800"><span>{notice}</span><button onClick={()=>setNotice("")} className="text-blue-800 hover:text-blue-900 font-medium">Dismiss</button></div>}
-
         {isEmpty?(
           <div className="rounded-3xl border-2 border-dashed border-slate-300 bg-white p-12 text-center">
             <div className="text-5xl mb-4">&#128203;</div>
             <h2 className="text-2xl font-semibold text-slate-900 mb-2">No Items Yet</h2>
-            <p className="text-slate-500 mb-6 max-w-lg mx-auto">Upload a file with your inventory items, or add them one at a time. The system will automatically detect which items are completed, in progress, or still need attention.</p>
+            <p className="text-slate-500 mb-6 max-w-lg mx-auto">Upload a file with your inventory items, or add them one at a time.</p>
             <div className="flex flex-wrap justify-center gap-3">
               <label className="inline-flex cursor-pointer items-center rounded-xl bg-slate-900 px-6 py-3 text-sm font-medium text-white hover:bg-slate-800"><span className="mr-2">&#8679;</span>Upload Item List<input type="file" className="hidden" onChange={onUpload}/></label>
               <Btn variant="outline" cls="px-6 py-3" onClick={()=>setAddOpen(true)}>+ Add Item Manually</Btn>
               <label className="font-medium rounded-xl px-6 py-3 text-sm border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 cursor-pointer inline-flex items-center">&#128194; Open Saved Project (.json)<input type="file" className="hidden" onChange={openFile}/></label>
-            </div>
-            <div className="mt-8 rounded-xl bg-slate-50 p-5 max-w-2xl mx-auto text-left">
-              <p className="font-medium text-slate-900 mb-2">&#128218; Supported file formats</p>
-              <div className="flex flex-wrap gap-2 mb-3">
-                <span className="inline-block px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-medium">&#9989; Excel (.xlsx, .xls)</span>
-                <span className="inline-block px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-medium">&#9989; CSV (.csv)</span>
-                <span className="inline-block px-3 py-1 rounded-lg bg-emerald-100 text-emerald-800 text-sm font-medium">&#9989; Text (.txt, .tsv)</span>
-              </div>
-              <p className="font-medium text-slate-900 mb-1 mt-3">&#129504; Smart detection</p>
-              <p className="text-sm text-slate-600">The app reads your file and automatically detects completed items. Items marked Yes, X, Done, Complete, or with a received date are sorted as Completed.</p>
-              <p className="text-sm text-slate-500 mt-2 italic">Note: Close files in Excel before uploading.</p>
             </div>
           </div>
         ):(
@@ -616,7 +598,6 @@ function App({user}){
                 <div key={c.t} className={"rounded-2xl border border-slate-200 shadow-sm p-5 "+c.bg}><p className="text-sm text-slate-500">{c.t}</p><p className="mt-1 text-3xl font-semibold text-slate-900">{c.v}</p><p className="mt-2 text-sm text-slate-500">{c.s}</p></div>
               )}
             </div>
-
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
               {STATUSES.map(st=>{const list=items.filter(i=>i.status===st);return(
                 <div key={st} className={"rounded-2xl border shadow-sm p-4 "+SPan[st]}>
@@ -629,84 +610,113 @@ function App({user}){
                 </div>
               )})}
             </div>
-
             <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
               <div className="flex flex-wrap items-center gap-4">
-                <input className="flex-1 min-w-[240px] rounded-xl border border-slate-200 px-4 py-2 text-sm" value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={e=>{if(e.key==="Enter"){e.preventDefault();setTab("queue")}}} placeholder="Search item, vendor, owner, notes, status..."/>
+                <input className="flex-1 min-w-[240px] rounded-xl border border-slate-200 px-4 py-2 text-sm" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search item, vendor, owner, notes, status..."/>
                 <select className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={stF} onChange={e=>setStF(e.target.value)}><option value="All">All statuses</option>{STATUSES.map(s=><option key={s} value={s}>{s}</option>)}</select>
                 <select className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={prF} onChange={e=>setPrF(e.target.value)}><option value="All">All priorities</option>{PRIOS.map(p=><option key={p} value={p}>{p}</option>)}</select>
                 <select className="rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={vnF} onChange={e=>setVnF(e.target.value)}><option value="All">All vendors</option>{uniqueVendors.map(v=><option key={v} value={v}>{v}</option>)}</select>
-                {(query||stF!=="All"||prF!=="All"||vnF!=="All"||sortBy)?<button onClick={clearFilters} className="px-3 py-2 text-xs font-medium rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100 transition-colors whitespace-nowrap">&times; Clear All</button>:null}
+                {(query||stF!=="All"||prF!=="All"||vnF!=="All"||sortBy)?<button onClick={clearFilters} className="px-3 py-2 text-xs font-medium rounded-xl border border-slate-300 text-slate-600 hover:bg-slate-100">&times; Clear All</button>:null}
               </div>
             </div>
-
             <div className="flex gap-2 flex-wrap">
-              {["dashboard","vendors","queue","emailQueue","attention","templates"].map(t=><button key={t} onClick={()=>setTab(t)} className={"px-4 py-2 rounded-xl text-sm font-medium transition-colors "+(tab===t?"bg-slate-900 text-white":"bg-white border border-slate-200 text-slate-700 hover:bg-slate-50")}>{t==="dashboard"?"\uD83D\uDCCA Dashboard":t==="vendors"?"\uD83D\uDCC7 Vendors":t==="queue"?"Team Queue":t==="emailQueue"?"Email Queue Preview":t==="attention"?"Needs Attention":"Templates"}</button>)}
+              {TAB_LIST.map(t=><button key={t} onClick={()=>setTab(t)} className={"px-4 py-2 rounded-xl text-sm font-medium transition-colors "+(tab===t?"bg-slate-900 text-white":"bg-white border border-slate-200 text-slate-700 hover:bg-slate-50")}>{TAB_LABELS[t]}</button>)}
             </div>
 
+            {/* ===== DASHBOARD TAB ===== */}
             {tab==="dashboard"&&(<div className="space-y-6">
-<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-<div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-center"><div className="text-4xl font-bold text-emerald-700">{met.pct}%</div><div className="text-sm text-emerald-600 mt-1">Overall Coverage</div><div className="text-xs text-emerald-500 mt-2">{met.done} of {met.total} items complete</div></div>
-<div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center"><div className="text-4xl font-bold text-amber-700">{met.ip}</div><div className="text-sm text-amber-600 mt-1">In Progress</div><div className="text-xs text-amber-500 mt-2">Requests sent, awaiting response</div></div>
-<div className="rounded-2xl border border-rose-200 bg-rose-50 p-5 text-center"><div className="text-4xl font-bold text-rose-700">{met.na}</div><div className="text-sm text-rose-600 mt-1">Needs Attention</div><div className="text-xs text-rose-500 mt-2">Missing info or vendor issues</div></div>
-<div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center"><div className="text-4xl font-bold text-slate-700">{met.nf}</div><div className="text-sm text-slate-600 mt-1">Not Started</div><div className="text-xs text-slate-500 mt-2">Ready to request</div></div>
-</div>
-<div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-<h3 className="text-lg font-semibold text-slate-900 mb-4">&#128202; Vendor Progress</h3>
-{items.length===0?<p className="text-slate-500 italic">No items yet. Upload a file to see vendor progress.</p>:
-<div className="space-y-3">{(function(){var vg={};items.forEach(function(it){var v=it.vendor||"Unknown";if(!vg[v])vg[v]={total:0,done:0,ip:0,na:0,nf:0};vg[v].total++;if(it.status==="Completed")vg[v].done++;else if(it.status==="In Progress")vg[v].ip++;else if(it.status==="Needs Attention")vg[v].na++;else vg[v].nf++});return Object.keys(vg).sort().map(function(v){var d=vg[v];var pct=d.total?Math.round(d.done/d.total*100):0;return React.createElement("div",{key:v,className:"rounded-xl border border-slate-100 p-3 hover:bg-slate-50 transition-colors"},React.createElement("div",{className:"flex items-center justify-between mb-2"},React.createElement("div",null,React.createElement("span",{className:"font-medium text-slate-900"},v),React.createElement("span",{className:"ml-2 text-xs text-slate-400"},d.total+" items")),React.createElement("span",{className:"text-sm font-semibold "+(pct===100?"text-emerald-600":pct>50?"text-amber-600":"text-rose-600")},pct+"%")),React.createElement("div",{className:"w-full bg-slate-100 rounded-full h-2.5 mb-2"},React.createElement("div",{className:"h-2.5 rounded-full transition-all "+(pct===100?"bg-emerald-500":pct>50?"bg-amber-400":"bg-rose-400"),style:{width:Math.max(pct,2)+"%"}})),React.createElement("div",{className:"flex gap-2 flex-wrap"},d.done>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700"},"\u2705 "+d.done+" done"),d.ip>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700"},"\u23F3 "+d.ip+" in progress"),d.na>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700"},"\u26A0\uFE0F "+d.na+" attention"),d.nf>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600"},"\u23F8 "+d.nf+" not started")))})})()}</div>}
-</div>
-<div className="rounded-2xl border border-red-200 bg-red-50 shadow-sm p-5">
-<h3 className="text-lg font-semibold text-red-900 mb-1">&#128276; Overdue Follow-Ups</h3>
-<p className="text-sm text-red-700 mb-4">Items past their follow-up date that still need action.</p>
-<div className="space-y-2 max-h-[400px] overflow-y-auto">{(function(){var today=new Date().toISOString().slice(0,10);var overdue=items.filter(function(it){return it.status!=="Completed"&&it.followUpDate&&it.followUpDate<=today});if(overdue.length===0)return React.createElement("div",{className:"text-center py-6"},React.createElement("p",{className:"text-2xl mb-2"},"\uD83C\uDF89"),React.createElement("p",{className:"text-red-700 font-medium"},"No overdue follow-ups!"),React.createElement("p",{className:"text-sm text-red-600"},"All follow-ups are on schedule."));return overdue.sort(function(a,b){return a.followUpDate.localeCompare(b.followUpDate)}).map(function(it){var days=Math.ceil((new Date(today)-new Date(it.followUpDate))/(1000*60*60*24));return React.createElement("div",{key:it.id,className:"flex items-center justify-between rounded-xl bg-white border border-red-100 px-3 py-2"},React.createElement("div",{className:"min-w-0 flex-1"},React.createElement("p",{className:"font-medium text-slate-900 text-sm truncate"},it.itemCode+" \u2014 "+it.itemName),React.createElement("p",{className:"text-xs text-slate-500 truncate"},it.vendor+" \u2022 Due: "+it.followUpDate)),React.createElement("div",{className:"flex items-center gap-2 ml-2 shrink-0"},React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-semibold"},days===0?"Due today":days+" day"+(days>1?"s":"")+" overdue"),React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full "+SC[it.status]},it.status)))})})()}</div>
-{(function(){var today=new Date().toISOString().slice(0,10);var upcoming=items.filter(function(it){return it.status!=="Completed"&&it.followUpDate&&it.followUpDate>today});var next3=upcoming.sort(function(a,b){return a.followUpDate.localeCompare(b.followUpDate)}).slice(0,5);if(next3.length===0)return null;return React.createElement("div",{className:"mt-4 pt-4 border-t border-red-200"},React.createElement("p",{className:"text-sm font-semibold text-red-800 mb-2"},"\uD83D\uDD52 Upcoming Follow-Ups"),React.createElement("div",{className:"space-y-1"},next3.map(function(it){return React.createElement("div",{key:it.id,className:"flex items-center justify-between text-sm text-red-700"},React.createElement("span",{className:"truncate"},it.itemCode+" \u2014 "+it.itemName),React.createElement("span",{className:"text-xs text-red-500 ml-2 shrink-0"},it.followUpDate))})))})()}
-</div>
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-<div className="rounded-2xl border border-amber-200 bg-amber-50 shadow-sm p-5">
-<h3 className="text-lg font-semibold text-amber-900 mb-4">&#9888;&#65039; Stale Items &#8212; No Contact in 7+ Days</h3>
-<div className="space-y-2 max-h-[400px] overflow-y-auto">{(function(){var now=Date.now();var week=7*24*60*60*1000;var stale=items.filter(function(it){if(it.status==="Completed")return false;if(!it.lastContact)return true;var d=new Date(it.lastContact);return isNaN(d.getTime())||now-d.getTime()>week});if(stale.length===0)return React.createElement("p",{className:"text-amber-700 italic"},"\uD83C\uDF89 No stale items \u2014 you're all caught up!");return stale.slice(0,20).map(function(it){return React.createElement("div",{key:it.id,className:"flex items-center justify-between rounded-xl bg-white border border-amber-100 px-3 py-2"},React.createElement("div",{className:"min-w-0 flex-1"},React.createElement("p",{className:"font-medium text-slate-900 text-sm truncate"},it.itemCode+" \u2014 "+it.itemName),React.createElement("p",{className:"text-xs text-slate-500 truncate"},it.vendor)),React.createElement("div",{className:"flex items-center gap-2 ml-2 shrink-0"},React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full "+SC[it.status]},it.status),React.createElement("span",{className:"text-xs text-amber-600 whitespace-nowrap"},it.lastContact||"Never")))})})()}</div>
-{(function(){var now=Date.now();var week=7*24*60*60*1000;var cnt=items.filter(function(it){if(it.status==="Completed")return false;if(!it.lastContact)return true;var d=new Date(it.lastContact);return isNaN(d.getTime())||now-d.getTime()>week}).length;if(cnt>20)return React.createElement("p",{className:"text-sm text-amber-700 mt-2"},"+ "+(cnt-20)+" more stale items");return null})()}
-</div>
-<div className="rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm p-5">
-<h3 className="text-lg font-semibold text-emerald-900 mb-4">&#9989; Recently Completed</h3>
-<div className="space-y-2 max-h-[400px] overflow-y-auto">{(function(){var done=items.filter(function(it){return it.status==="Completed"});if(done.length===0)return React.createElement("p",{className:"text-emerald-700 italic"},"No completed items yet.");return done.slice(0,20).map(function(it){return React.createElement("div",{key:it.id,className:"flex items-center justify-between rounded-xl bg-white border border-emerald-100 px-3 py-2"},React.createElement("div",{className:"min-w-0 flex-1"},React.createElement("p",{className:"font-medium text-slate-900 text-sm truncate"},it.itemCode+" \u2014 "+it.itemName),React.createElement("p",{className:"text-xs text-slate-500 truncate"},it.vendor)),React.createElement("span",{className:"text-xs text-emerald-600 ml-2 shrink-0"},it.lastContact||"\u2713"))})})()}</div>
-{(function(){var cnt=items.filter(function(it){return it.status==="Completed"}).length;if(cnt>20)return React.createElement("p",{className:"text-sm text-emerald-700 mt-2"},"+ "+(cnt-20)+" more completed");return null})()}
-</div>
-</div>
-</div>)}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-center"><div className="text-4xl font-bold text-emerald-700">{met.pct}%</div><div className="text-sm text-emerald-600 mt-1">Overall Coverage</div><div className="text-xs text-emerald-500 mt-2">{met.done} of {met.total} items complete</div></div>
+                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center"><div className="text-4xl font-bold text-amber-700">{met.ip}</div><div className="text-sm text-amber-600 mt-1">In Progress</div><div className="text-xs text-amber-500 mt-2">Requests sent, awaiting response</div></div>
+                <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5 text-center"><div className="text-4xl font-bold text-rose-700">{met.na}</div><div className="text-sm text-rose-600 mt-1">Needs Attention</div><div className="text-xs text-rose-500 mt-2">Missing info or vendor issues</div></div>
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center"><div className="text-4xl font-bold text-slate-700">{met.nf}</div><div className="text-sm text-slate-600 mt-1">Not Started</div><div className="text-xs text-slate-500 mt-2">Ready to request</div></div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6"><h3 className="text-lg font-semibold text-slate-900 mb-4">&#129383; Status Breakdown</h3><div style={{height:'280px'}}><DonutChart met={met}/></div></div>
+                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6"><h3 className="text-lg font-semibold text-slate-900 mb-4">&#127970; Top Vendors by Items</h3><div style={{height:'280px'}}><BarChart items={items}/></div></div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">&#128202; Vendor Progress</h3>
+                {items.length===0?<p className="text-slate-500 italic">No items yet.</p>:
+                <div className="space-y-3">{(function(){var vg={};items.forEach(function(it){var v=it.vendor||"Unknown";if(!vg[v])vg[v]={total:0,done:0,ip:0,na:0,nf:0};vg[v].total++;if(it.status==="Completed")vg[v].done++;else if(it.status==="In Progress")vg[v].ip++;else if(it.status==="Needs Attention")vg[v].na++;else vg[v].nf++});return Object.keys(vg).sort().map(function(v){var d=vg[v];var pct=d.total?Math.round(d.done/d.total*100):0;return React.createElement("div",{key:v,className:"rounded-xl border border-slate-100 p-3 hover:bg-slate-50 transition-colors"},React.createElement("div",{className:"flex items-center justify-between mb-2"},React.createElement("div",null,React.createElement("span",{className:"font-medium text-slate-900"},v),React.createElement("span",{className:"ml-2 text-xs text-slate-400"},d.total+" items")),React.createElement("span",{className:"text-sm font-semibold "+(pct===100?"text-emerald-600":pct>50?"text-amber-600":"text-rose-600")},pct+"%")),React.createElement("div",{className:"w-full bg-slate-100 rounded-full h-2.5 mb-2"},React.createElement("div",{className:"h-2.5 rounded-full transition-all "+(pct===100?"bg-emerald-500":pct>50?"bg-amber-400":"bg-rose-400"),style:{width:Math.max(pct,2)+"%"}})),React.createElement("div",{className:"flex gap-2 flex-wrap"},d.done>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700"},"\u2705 "+d.done+" done"),d.ip>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700"},"\u23F3 "+d.ip+" in progress"),d.na>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700"},"\u26A0\uFE0F "+d.na+" attention"),d.nf>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600"},"\u23F8 "+d.nf+" not started")))})})()}</div>}
+              </div>
+            </div>)}
 
+            {/* ===== LIVE DASHBOARD TAB ===== */}
+            {tab==="liveDashboard"&&(
+              <div className="ld-wrap">
+                <div className="ld-hdr">
+                  <div className="ld-title">&#128225; Live Dashboard <span className="ld-live"><span className="ld-dot"></span>LIVE</span></div>
+                  <div className="ld-clock">{liveClock.toLocaleString()}</div>
+                </div>
+                <div className="ld-stats">
+                  <div className="ld-stat indigo"><div className="ld-stat-val">{met.total}</div><div className="ld-stat-lbl">Total Items</div><div className="ld-stat-sub">{uniqueVendors.length} vendors tracked</div></div>
+                  <div className="ld-stat green"><div className="ld-stat-val">{met.done}</div><div className="ld-stat-lbl">Completed</div><div className="ld-stat-sub">{met.pct}% coverage</div></div>
+                  <div className="ld-stat amber"><div className="ld-stat-val">{met.ip}</div><div className="ld-stat-lbl">In Progress</div><div className="ld-stat-sub">Requests sent</div></div>
+                  <div className="ld-stat rose"><div className="ld-stat-val">{met.na}</div><div className="ld-stat-lbl">Needs Attention</div><div className="ld-stat-sub">{overdueCount} overdue</div></div>
+                </div>
+                <div className="ld-grid">
+                  <div className="ld-card"><div className="ld-card-title">&#127849; Status Breakdown</div><div style={{height:'260px'}}><LiveDonutChart met={met}/></div></div>
+                  <div className="ld-card"><div className="ld-card-title">&#127970; Top Vendors</div><div style={{height:'260px'}}><LiveBarChart items={items}/></div></div>
+                </div>
+                <div className="ld-grid">
+                  <div className="ld-card">
+                    <div className="ld-card-title">&#9889; Activity Feed</div>
+                    <div className="ld-feed">
+                      {activityLog.map(a=>(
+                        <div key={a.id} className="ld-feed-item">
+                          <span className={"ld-feed-dot "+a.type}></span>
+                          <div style={{flex:1}}><div className="ld-feed-text">{a.text}</div><div className="ld-feed-time">{relTime(a.time)}</div></div>
+                        </div>
+                      ))}
+                      {activityLog.length===0&&<div className="ld-feed-text" style={{textAlign:'center',padding:'24px 0',color:'#64748b'}}>No activity yet.</div>}
+                    </div>
+                  </div>
+                  <div className="ld-card">
+                    <div className="ld-card-title">&#128202; Vendor Progress</div>
+                    <div className="ld-vp ld-feed">
+                      {liveVendorStats.map(([vn,d])=>{const pct=d.total?Math.round(d.done/d.total*100):0;const cls=pct>=70?'high':pct>=40?'mid':'low';return(
+                        <div key={vn} className="ld-vp-item">
+                          <div className="ld-vp-top"><span className="ld-vp-name">{vn}</span><span className={"ld-vp-pct "+cls}>{pct}%</span></div>
+                          <div className="ld-vp-bar"><div className={"ld-vp-fill "+cls} style={{width:Math.max(pct,2)+"%"}}></div></div>
+                          <div className="ld-vp-tags">
+                            {d.done>0&&<span className="ld-vp-tag g">&#10003; {d.done}</span>}
+                            {d.ip>0&&<span className="ld-vp-tag a">&#9203; {d.ip}</span>}
+                            {d.na>0&&<span className="ld-vp-tag r">&#9888; {d.na}</span>}
+                            {d.nf>0&&<span className="ld-vp-tag s">&#9208; {d.nf}</span>}
+                          </div>
+                        </div>
+                      )})}
+                      {liveVendorStats.length===0&&<div className="ld-feed-text" style={{textAlign:'center',padding:'24px 0',color:'#64748b'}}>No vendor data yet.</div>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ===== VENDORS TAB ===== */}
             {tab==="vendors"&&(<div className="space-y-6">
-<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-<div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-center"><div className="text-4xl font-bold text-indigo-700">{Object.keys(vendorDir).length}</div><div className="text-sm text-indigo-600 mt-1">In Directory</div></div>
-<div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center"><div className="text-4xl font-bold text-slate-700">{(function(){var vs={};items.forEach(function(it){if(it.vendor)vs[it.vendor]=true});return Object.keys(vs).length})()}</div><div className="text-sm text-slate-600 mt-1">Unique Vendors in Items</div></div>
-<div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center"><div className="text-4xl font-bold text-amber-700">{(function(){var vs={};items.forEach(function(it){if(it.vendor&&it.vendor!=="Unknown Vendor")vs[it.vendor]=true});var missing=0;Object.keys(vs).forEach(function(v){if(!vendorDir[v])missing++});return missing})()}</div><div className="text-sm text-amber-600 mt-1">Missing from Directory</div></div>
-</div>
-<div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-<h3 className="text-lg font-semibold text-slate-900 mb-4">&#10133; Add Vendor to Directory</h3>
-<div className="flex gap-2 flex-wrap">
-<input className="flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Vendor name" value={dirVendor} onChange={function(e){setDirVendor(e.target.value)}}/>
-<input className="flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Email address" value={dirEmail} onChange={function(e){setDirEmail(e.target.value)}} onKeyDown={function(e){if(e.key==="Enter")addDirEntry()}}/>
-<Btn onClick={addDirEntry}>Add to Directory</Btn>
-</div>
-</div>
-<div className="rounded-2xl border border-amber-200 bg-amber-50 shadow-sm p-5">
-<div className="flex items-center justify-between mb-4">
-<div><h3 className="text-lg font-semibold text-amber-900">&#128269; Missing Vendors</h3><p className="text-sm text-amber-700">Vendors found in your items but not in the directory yet.</p></div>
-<Btn size="sm" variant="outline" onClick={function(){var vs={};items.forEach(function(it){if(it.vendor&&it.vendor!=="Unknown Vendor"&&!vendorDir[it.vendor]){if(!vs[it.vendor])vs[it.vendor]=true}});var keys=Object.keys(vs);if(keys.length===0){setNotice("All vendors are in the directory!");return}var added=0;keys.forEach(function(v){var em=items.find(function(it){return it.vendor===v&&it.vendorEmail});if(em){setVendorDir(function(p){var n=Object.assign({},p);n[v]=em.vendorEmail;return n});added++}});setNotice("Scanned "+keys.length+" missing vendors. Auto-added "+added+" with known emails. Add the rest manually below.")}}>&#128270; Auto-Scan Items</Btn>
-</div>
-<div className="space-y-2 max-h-[300px] overflow-y-auto">{(function(){var vs={};items.forEach(function(it){if(it.vendor&&it.vendor!=="Unknown Vendor"&&!vendorDir[it.vendor]){if(!vs[it.vendor])vs[it.vendor]={count:0,email:""};vs[it.vendor].count++;if(it.vendorEmail&&!vs[it.vendor].email)vs[it.vendor].email=it.vendorEmail}});var keys=Object.keys(vs).sort();if(keys.length===0)return React.createElement("p",{className:"text-amber-700 italic text-center py-4"},"\u2705 All vendors are in the directory!");return keys.map(function(v){return React.createElement("div",{key:v,className:"flex items-center justify-between rounded-xl bg-white border border-amber-100 px-3 py-2"},React.createElement("div",{className:"min-w-0 flex-1"},React.createElement("span",{className:"font-medium text-slate-900"},v),React.createElement("span",{className:"ml-2 text-xs text-slate-500"},vs[v].count+" items"),vs[v].email&&React.createElement("span",{className:"ml-2 text-xs text-amber-600"},vs[v].email)),React.createElement("Btn",{size:"sm",onClick:function(){var em=vs[v].email||window.prompt("Enter email for "+v+":")||"";if(em){setVendorDir(function(p){var n=Object.assign({},p);n[v]=em.trim();return n});setNotice("Added "+v+" to directory.")}}},vs[v].email?"+ Add":"Enter Email"))})})()}</div>
-</div>
-<div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-<div className="flex items-center justify-between mb-4">
-<h3 className="text-lg font-semibold text-slate-900">&#128209; Full Vendor Directory</h3>
-<span className="text-sm text-slate-500">{Object.keys(vendorDir).length} vendors</span>
-</div>
-{Object.keys(vendorDir).length===0?<p className="text-center py-8 text-slate-400 italic">No vendors in directory yet. Add them above or use Auto-Scan.</p>:
-<div className="overflow-x-auto rounded-xl border border-slate-200"><table className="w-full text-sm"><thead className="bg-slate-100 text-slate-600"><tr><th className="px-4 py-3 text-left font-medium">Vendor</th><th className="px-4 py-3 text-left font-medium">Email</th><th className="px-4 py-3 text-left font-medium">Items</th><th className="px-4 py-3 text-left font-medium">Status Breakdown</th><th className="px-4 py-3 text-right font-medium">Actions</th></tr></thead><tbody>{(function(){return Object.entries(vendorDir).sort(function(a,b){return a[0].localeCompare(b[0])}).map(function(pair){var vn=pair[0];var ve=pair[1];var vi=items.filter(function(it){return it.vendor===vn});var done=vi.filter(function(it){return it.status==="Completed"}).length;var ip=vi.filter(function(it){return it.status==="In Progress"}).length;var na=vi.filter(function(it){return it.status==="Needs Attention"}).length;var nf=vi.filter(function(it){return it.status==="Not Finished"}).length;var noEmail=vi.filter(function(it){return!it.vendorEmail}).length;return React.createElement("tr",{key:vn,className:"border-t border-slate-200 hover:bg-slate-50"},React.createElement("td",{className:"px-4 py-3 font-medium text-slate-900"},vn),React.createElement("td",{className:"px-4 py-3 text-slate-600 break-all"},ve),React.createElement("td",{className:"px-4 py-3"},React.createElement("span",{className:"text-sm font-semibold text-slate-700"},vi.length)),React.createElement("td",{className:"px-4 py-3"},React.createElement("div",{className:"flex gap-1 flex-wrap"},done>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700"},"\u2705"+done),ip>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700"},"\u23F3"+ip),na>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700"},"\u26A0\uFE0F"+na),nf>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600"},"\u23F8"+nf),vi.length===0&&React.createElement("span",{className:"text-xs text-slate-400 italic"},"No items"))),React.createElement("td",{className:"px-4 py-3 text-right"},React.createElement("div",{className:"flex justify-end gap-2"},noEmail>0&&React.createElement("Btn",{size:"sm",variant:"outline",onClick:function(){setItems(function(p){return p.map(function(x){return x.vendor===vn&&!x.vendorEmail?Object.assign({},x,{vendorEmail:ve}):x})});setNotice("Applied email to "+noEmail+" items for "+vn+".")}},"Apply ("+noEmail+")"),React.createElement("Btn",{size:"sm",variant:"ghost",cls:"text-red-600",onClick:function(){removeDirEntry(vn)}},"Remove"))))})})()}</tbody></table></div>}
-</div>
-</div>)}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="rounded-2xl border border-indigo-200 bg-indigo-50 p-5 text-center"><div className="text-4xl font-bold text-indigo-700">{Object.keys(vendorDir).length}</div><div className="text-sm text-indigo-600 mt-1">In Directory</div></div>
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center"><div className="text-4xl font-bold text-slate-700">{uniqueVendors.length}</div><div className="text-sm text-slate-600 mt-1">Unique Vendors in Items</div></div>
+                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center"><div className="text-4xl font-bold text-amber-700">{(function(){var m=0;uniqueVendors.forEach(function(v){if(!vendorDir[v])m++});return m})()}</div><div className="text-sm text-amber-600 mt-1">Missing from Directory</div></div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">&#10133; Add Vendor to Directory</h3>
+                <div className="flex gap-2 flex-wrap">
+                  <input className="flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Vendor name" value={dirVendor} onChange={function(e){setDirVendor(e.target.value)}}/>
+                  <input className="flex-1 min-w-[200px] rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Email address" value={dirEmail} onChange={function(e){setDirEmail(e.target.value)}} onKeyDown={function(e){if(e.key==="Enter")addDirEntry()}}/>
+                  <Btn onClick={addDirEntry}>Add to Directory</Btn>
+                </div>
+              </div>
+              <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
+                <h3 className="text-lg font-semibold text-slate-900 mb-4">&#128209; Full Vendor Directory</h3>
+                {Object.keys(vendorDir).length===0?<p className="text-center py-8 text-slate-400">No vendors yet.</p>:
+                <div className="overflow-x-auto rounded-xl border border-slate-200"><table className="w-full text-sm"><thead className="bg-slate-100 text-slate-600"><tr><th className="px-4 py-3 text-left font-medium">Vendor</th><th className="px-4 py-3 text-left font-medium">Email</th><th className="px-4 py-3 text-right font-medium">Actions</th></tr></thead><tbody>{Object.entries(vendorDir).sort().map(function(pair){return <tr key={pair[0]} className="border-t border-slate-200 hover:bg-slate-50"><td className="px-4 py-3 font-medium text-slate-900">{pair[0]}</td><td className="px-4 py-3 text-slate-600">{pair[1]}</td><td className="px-4 py-3 text-right"><Btn size="sm" variant="ghost" cls="text-red-600" onClick={function(){removeDirEntry(pair[0])}}>Remove</Btn></td></tr>})}</tbody></table></div>}
+              </div>
+            </div>)}
 
+            {/* ===== TEAM QUEUE TAB ===== */}
             {tab==="queue"&&(
               <div className="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden">
                 <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200"><h3 className="text-xl font-semibold text-slate-900">Shared Request Queue</h3><p className="text-sm text-slate-500">{"Showing "+((safePage-1)*pageSize+1)+"\u2013"+Math.min(safePage*pageSize,sorted.length)+" of "+sorted.length+" items"}</p></div>
@@ -721,11 +731,12 @@ function App({user}){
                           <td className="px-4 py-4">{query?highlightMatch(item.owner,query):item.owner}</td>
                           <td className="px-4 py-4"><Badge cls={PrC[item.priority]||PrC.Medium}>{item.priority}</Badge></td>
                           <td className="min-w-[160px] px-4 py-4"><select className="w-full rounded-xl border border-slate-200 px-2 py-1.5 text-sm bg-white" value={item.status} onChange={e=>setSt(item.id,e.target.value)}>{STATUSES.map(s=><option key={s} value={s}>{s}</option>)}</select></td>
-                          <td className="px-4 py-4 text-slate-600">{item.lastContact||"-"}</td><td className="px-4 py-4">{item.status!=="Completed"?React.createElement("input",{type:"date",className:"rounded-lg border "+(item.followUpDate&&new Date(item.followUpDate)<new Date()?"border-rose-300 bg-rose-50 text-rose-700 font-semibold":"border-slate-200 bg-white text-slate-700")+" px-2 py-1 text-sm w-32",value:item.followUpDate||"",onChange:function(e){setItems(function(p){return p.map(function(x){return x.id===item.id?Object.assign({},x,{followUpDate:e.target.value}):x})})}}):React.createElement("span",{className:"text-emerald-600 text-sm"},"\\u2713 Done")}</td>
-                          <td className="min-w-[300px] px-4 py-4"><div className="flex flex-wrap justify-end gap-2"><Btn size="sm" variant="outline" onClick={function(){if(!item.vendorEmail){var em=window.prompt("No vendor email found for "+item.vendor+". Please enter their email:");if(em){item.vendorEmail=em.trim();compose(item,item.status==="In Progress"?"followup":"request")}else{setNotice("Vendor email is needed to compose. You can add it in the Vendor Directory.")}}else{compose(item,item.status==="In Progress"?"followup":"request")}}}>&#9993; Compose</Btn><Btn size="sm" variant="outline" onClick={()=>compose(item,"clarification")}>Clarify</Btn><Btn size="sm" onClick={()=>markDone(item.id)}>Complete</Btn></div></td>
+                          <td className="px-4 py-4 text-slate-600">{item.lastContact||"-"}</td>
+                          <td className="px-4 py-4">{item.status!=="Completed"?React.createElement("input",{type:"date",className:"rounded-lg border border-slate-200 bg-white text-slate-700 px-2 py-1 text-sm w-32",value:item.followUpDate||"",onChange:function(e){setItems(function(p){return p.map(function(x){return x.id===item.id?Object.assign({},x,{followUpDate:e.target.value}):x})})}}):React.createElement("span",{className:"text-emerald-600 text-sm"},"\u2713 Done")}</td>
+                          <td className="min-w-[300px] px-4 py-4"><div className="flex flex-wrap justify-end gap-2"><Btn size="sm" variant="outline" onClick={function(){if(!item.vendorEmail){var em=window.prompt("Enter vendor email for "+item.vendor+":");if(em){item.vendorEmail=em.trim();compose(item,item.status==="In Progress"?"followup":"request")}else{setNotice("Vendor email is needed.")}}else{compose(item,item.status==="In Progress"?"followup":"request")}}}>&#9993; Compose</Btn><Btn size="sm" variant="outline" onClick={()=>compose(item,"clarification")}>Clarify</Btn><Btn size="sm" onClick={()=>markDone(item.id)}>Complete</Btn></div></td>
                         </tr>
                       ))}
-                      {sorted.length===0&&<tr><td colSpan={7} className="px-4 py-10 text-center text-slate-500">No items match your filters.</td></tr>}
+                      {sorted.length===0&&<tr><td colSpan={8} className="px-4 py-10 text-center text-slate-500">No items match your filters.</td></tr>}
                     </tbody>
                   </table>
                 </div>
@@ -741,6 +752,7 @@ function App({user}){
               </div>
             )}
 
+            {/* ===== EMAIL QUEUE TAB ===== */}
             {tab==="emailQueue"&&(
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 <div className="lg:col-span-2 space-y-4">
@@ -757,7 +769,8 @@ function App({user}){
                         </div>
                         <div className="flex flex-wrap gap-2">
                           <Btn size="sm" variant="outline" onClick={()=>cpQ(m)}>Copy</Btn>
-                          <Btn size="sm" disabled={m.status==="Sent"} onClick={()=>testSend(m.id)}>{m.status==="Sending..."?"Sending...":"\uD83D\uDCE7 Send"}</Btn><Btn size="sm" variant="outline" onClick={function(){openInOutlook(m.to,m.subject,m.body)}}>&#128228; Outlook</Btn>
+                          <Btn size="sm" disabled={m.status==="Sent"} onClick={()=>testSend(m.id)}>{m.status==="Sending..."?"Sending...":"\uD83D\uDCE7 Send"}</Btn>
+                          <Btn size="sm" variant="outline" onClick={function(){openInOutlook(m.to,m.subject,m.body)}}>&#128228; Outlook</Btn>
                           <Btn size="sm" variant="ghost" cls="text-red-600" onClick={()=>rmQ(m.id)}>Remove</Btn>
                         </div>
                       </div>
@@ -768,12 +781,12 @@ function App({user}){
                 </div>
                 <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
                   <h3 className="text-lg font-semibold text-slate-900 mb-3">Queue Test Checklist</h3>
-                  <div className="rounded-xl bg-slate-50 p-4 text-sm text-slate-700"><p className="font-medium mb-2">Expected behavior:</p><ul className="ml-4 list-disc space-y-1"><li>Compose opens with vendor, subject, body</li><li>Queue Email adds to this tab</li><li>Status changes to In Progress</li><li>Last Contact updates</li><li>Test Send marks as Sent</li></ul></div>
                   <Btn cls="w-full mt-4" onClick={runTest}>&#9889; Run Queue Test</Btn>
                 </div>
               </div>
             )}
 
+            {/* ===== ATTENTION TAB ===== */}
             {tab==="attention"&&(
               <div className="rounded-2xl border border-rose-200 bg-rose-50 shadow-sm p-5">
                 <h3 className="text-xl font-semibold text-rose-900 mb-4">Items Needing Attention</h3>
@@ -791,6 +804,7 @@ function App({user}){
               </div>
             )}
 
+            {/* ===== TEMPLATES TAB ===== */}
             {tab==="templates"&&(
               <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
                 {["request","followup","clarification"].map(type=>{const e=mkEmail({itemName:"[Item Name]",itemCode:"[Item Code]"},type);return(
@@ -812,15 +826,13 @@ function App({user}){
           </>
         )}
       </div>
-
+      {/* ===== MODALS ===== */}
       <Modal open={uplOpen} onClose={()=>{setUplOpen(false);setDetectedCols([])}} title="Upload Preview - Auto Sorted" wide>
-        {detectedCols.length>0&&<div className="rounded-xl bg-slate-50 border border-slate-200 p-3 mb-4"><p className="text-xs font-medium text-slate-700 mb-1">&#128269; Detected columns from your file:</p><div className="flex flex-wrap gap-1">{detectedCols.map((c,i)=><span key={i} className="inline-block px-2 py-0.5 bg-white border border-slate-200 rounded text-xs text-slate-600">{c}</span>)}</div></div>}
+        {detectedCols.length>0&&<div className="rounded-xl bg-slate-50 border border-slate-200 p-3 mb-4"><p className="text-xs font-medium text-slate-700 mb-1">&#128269; Detected columns:</p><div className="flex flex-wrap gap-1">{detectedCols.map((c,i)=><span key={i} className="inline-block px-2 py-0.5 bg-white border border-slate-200 rounded text-xs text-slate-600">{c}</span>)}</div></div>}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">{STATUSES.map(st=><div key={st} className={"rounded-xl border p-3 "+SPan[st]}><p className="font-medium text-slate-900 text-sm">{st}</p><p className="text-2xl font-semibold">{prev.filter(i=>i.status===st).length}</p></div>)}</div>
-        {vendorSummary.length>0&&<div className="rounded-xl bg-indigo-50 border border-indigo-200 p-3 mb-4"><p className="text-xs font-medium text-indigo-800 mb-2">{"Vendors found ("+vendorSummary.length+")"}</p><div className="flex flex-wrap gap-1.5">{vendorSummary.map(function(pair,i){return <span key={i} className="inline-block px-2.5 py-1 bg-white border border-indigo-200 rounded-lg text-xs text-indigo-700 font-medium">{pair[0]+" ("+pair[1]+")"}</span>})}</div></div>}
         <div className="overflow-x-auto rounded-xl border border-slate-200 mb-4"><table className="w-full text-sm"><thead className="bg-slate-100"><tr><th className="px-3 py-2 text-left">Item</th><th className="px-3 py-2 text-left">Vendor</th><th className="px-3 py-2 text-left">Email</th><th className="px-3 py-2 text-left">Status</th><th className="px-3 py-2 text-left">Priority</th></tr></thead><tbody>{prev.slice(0,50).map(item=><tr key={item.id} className="border-t"><td className="px-3 py-2"><p className="font-medium">{item.itemCode}</p><p className="text-slate-500 text-xs">{item.itemName}</p></td><td className="px-3 py-2">{item.vendor}</td><td className="px-3 py-2">{item.vendorEmail||"Missing"}</td><td className="px-3 py-2"><Badge cls={SC[item.status]}>{item.status}</Badge></td><td className="px-3 py-2"><Badge cls={PrC[item.priority]}>{item.priority}</Badge></td></tr>)}{prev.length>50&&<tr><td colSpan={5} className="px-3 py-2 text-center text-slate-500">{"...and "+(prev.length-50)+" more items"}</td></tr>}</tbody></table></div>
         <div className="flex justify-end gap-2"><Btn variant="outline" onClick={()=>{setUplOpen(false);setDetectedCols([])}}>Cancel</Btn><Btn onClick={doImport}>Import {prev.length} Items</Btn></div>
       </Modal>
-
       <Modal open={addOpen} onClose={()=>setAddOpen(false)} title="Add SDS Item">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <input className="rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Item code *" value={ni.itemCode} onChange={e=>setNi({...ni,itemCode:e.target.value})}/>
@@ -833,7 +845,6 @@ function App({user}){
         </div>
         <div className="flex justify-end gap-2"><Btn variant="outline" onClick={()=>setAddOpen(false)}>Cancel</Btn><Btn onClick={addItemFn}>Save Item</Btn></div>
       </Modal>
-
       <Modal open={compOpen} onClose={()=>setCompOpen(false)} title="Compose Email">
         {active&&<div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -848,7 +859,6 @@ function App({user}){
           <div className="flex justify-end gap-2"><Btn variant="outline" onClick={()=>setCompOpen(false)}>Close</Btn><Btn onClick={doQueue}>&#9993; Queue Email</Btn><Btn variant="outline" onClick={function(){openInOutlook(active.vendorEmail,subj,bod)}}>&#128228; Open in Outlook</Btn></div>
         </div>}
       </Modal>
-
       <Modal open={newProjOpen} onClose={()=>setNewProjOpen(false)} title="Start New Project?">
         <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 mb-4">
           <p className="font-medium text-amber-900">&#9888; This will clear all current items and queued emails.</p>
@@ -860,7 +870,6 @@ function App({user}){
           <Btn variant="danger" onClick={newProject}>Clear Everything &amp; Start Fresh</Btn>
         </div>
       </Modal>
-
       <Modal open={dirOpen} onClose={()=>setDirOpen(false)} title="Vendor Email Directory" wide>
         <p className="text-sm text-slate-600 mb-4">Add vendor emails here. They auto-fill when you upload items.</p>
         <div className="flex gap-2 mb-4">
@@ -868,33 +877,29 @@ function App({user}){
           <input className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm" placeholder="Email" value={dirEmail} onChange={e=>setDirEmail(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")addDirEntry()}}/>
           <Btn onClick={addDirEntry}>Add</Btn>
         </div>
-        {Object.keys(vendorDir).length>0?<div className="overflow-x-auto rounded-xl border border-slate-200"><table className="w-full text-sm"><thead className="bg-slate-100"><tr><th className="px-3 py-2 text-left">Vendor</th><th className="px-3 py-2 text-left">Email</th><th className="px-3 py-2 text-right">Action</th></tr></thead><tbody>{Object.entries(vendorDir).sort().map(function(pair){return <tr key={pair[0]} className="border-t"><td className="px-3 py-2 font-medium">{pair[0]}</td><td className="px-3 py-2 text-slate-600">{pair[1]}</td><td className="px-3 py-2 text-right"><Btn size="sm" variant="outline" onClick={function(){removeDirEntry(pair[0])}}>Remove</Btn></td></tr>})}</tbody></table></div>:<p className="text-center py-8 text-slate-400">No vendors yet. Add emails above to auto-fill on upload.</p>}
+        {Object.keys(vendorDir).length>0?<div className="overflow-x-auto rounded-xl border border-slate-200"><table className="w-full text-sm"><thead className="bg-slate-100"><tr><th className="px-3 py-2 text-left">Vendor</th><th className="px-3 py-2 text-left">Email</th><th className="px-3 py-2 text-right">Action</th></tr></thead><tbody>{Object.entries(vendorDir).sort().map(function(pair){return <tr key={pair[0]} className="border-t"><td className="px-3 py-2 font-medium">{pair[0]}</td><td className="px-3 py-2 text-slate-600">{pair[1]}</td><td className="px-3 py-2 text-right"><Btn size="sm" variant="outline" onClick={function(){removeDirEntry(pair[0])}}>Remove</Btn></td></tr>})}</tbody></table></div>:<p className="text-center py-8 text-slate-400">No vendors yet.</p>}
       </Modal>
-
       <Modal open={mapOpen} onClose={function(){setMapOpen(false);setUplOpen(true)}} title="Map Your Columns" wide>
         <p className="text-sm text-slate-600 mb-4">Match columns to fields or leave as Auto.</p>
         <div className="grid gap-3 mb-4">{Object.entries(FIELD_LABELS).map(function(pair){return <div key={pair[0]} className="flex items-center gap-3"><label className="w-36 text-sm font-medium text-slate-700">{pair[1]}</label><select className="flex-1 rounded-xl border border-slate-200 px-3 py-2 text-sm bg-white" value={colMap[pair[0]]||"auto"} onChange={function(e){setColMap(function(prev){var n=Object.assign({},prev);n[pair[0]]=e.target.value;return n})}}><option value="auto">Auto (recommended)</option>{rawCols.map(function(col,ci){return <option key={ci} value={col}>{col}</option>})}</select></div>})}</div>
-        <div className="flex justify-end gap-2"><Btn variant="outline" onClick={function(){setMapOpen(false);setNotice("Using auto-detected columns.");setUplOpen(true)}}>Skip</Btn><Btn onClick={applyMapping}>Apply Mapping</Btn></div>
+        <div className="flex justify-end gap-2"><Btn variant="outline" onClick={function(){setMapOpen(false);setUplOpen(true)}}>Skip</Btn><Btn onClick={applyMapping}>Apply Mapping</Btn></div>
       </Modal>
-
       <Modal open={bulkOpen} onClose={function(){setBulkOpen(false)}} title="Bulk Email by Vendor" wide>
         {!bulkVendor?<div>
           <p className="text-sm text-slate-600 mb-4">Select a vendor to send one email covering all their outstanding items.</p>
-          {vendorGroups.length>0?<div className="space-y-2">{vendorGroups.map(function(g){return <div key={g.vendor} className="flex items-center justify-between rounded-xl border border-slate-200 p-3 hover:bg-slate-50"><div><p className="font-medium text-slate-900">{g.vendor}</p><p className="text-xs text-slate-500">{g.items.length+" items need SDS"}{g.email?" \u2022 "+g.email:""}</p></div><Btn size="sm" onClick={function(){openBulk(g)}}>{g.email?"Compose":"Need Email"}</Btn></div>})}</div>:<p className="text-center py-8 text-slate-400">No outstanding items. All completed!</p>}
+          {vendorGroups.length>0?<div className="space-y-2">{vendorGroups.map(function(g){return <div key={g.vendor} className="flex items-center justify-between rounded-xl border border-slate-200 p-3 hover:bg-slate-50"><div><p className="font-medium text-slate-900">{g.vendor}</p><p className="text-xs text-slate-500">{g.items.length+" items need SDS"}{g.email?" \u2022 "+g.email:""}</p></div><Btn size="sm" onClick={function(){openBulk(g)}}>{g.email?"Compose":"Need Email"}</Btn></div>})}</div>:<p className="text-center py-8 text-slate-400">No outstanding items.</p>}
         </div>:<div className="space-y-4">
-          <div className="flex items-center gap-2 mb-2"><Btn size="sm" variant="outline" onClick={function(){setBulkVendor(null)}}>\u2190 Back</Btn><p className="font-medium text-slate-900">{bulkVendor.vendor+" ("+bulkVendor.items.length+" items)"}</p></div>
+          <div className="flex items-center gap-2 mb-2"><Btn size="sm" variant="outline" onClick={function(){setBulkVendor(null)}}>{"\u2190 Back"}</Btn><p className="font-medium text-slate-900">{bulkVendor.vendor+" ("+bulkVendor.items.length+" items)"}</p></div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3"><p className="text-xs uppercase text-slate-500">To</p><p className="mt-1 font-medium text-slate-900">{bulkVendor.email}</p></div>
           <div><label className="text-sm font-medium text-slate-700">Subject</label><input className="w-full mt-1 rounded-xl border border-slate-200 px-3 py-2 text-sm" value={bulkSubj} onChange={function(e){setBulkSubj(e.target.value)}}/></div>
           <div><label className="text-sm font-medium text-slate-700">Body</label><textarea className="w-full mt-1 rounded-xl border border-slate-200 px-3 py-2 text-sm" rows={12} value={bulkBod} onChange={function(e){setBulkBod(e.target.value)}}/></div>
-          <div className="rounded-xl bg-indigo-50 border border-indigo-200 p-3"><p className="text-xs font-medium text-indigo-800 mb-1">{"Items included ("+bulkVendor.items.length+")"}</p><div className="max-h-40 overflow-y-auto text-xs text-indigo-700">{bulkVendor.items.map(function(it){return <p key={it.id}>{it.itemCode+" - "+it.itemName}</p>})}</div></div>
           <div className="flex justify-end gap-2"><Btn variant="outline" onClick={function(){setBulkOpen(false)}}>Cancel</Btn><Btn onClick={doBulkQueue}>Queue Bulk Email</Btn><Btn variant="outline" onClick={function(){openInOutlook(bulkVendor.email,bulkSubj,bulkBod)}}>&#128228; Open in Outlook</Btn></div>
         </div>}
       </Modal>
     </div>
   );
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(<AuthGate>{(user)=><App user={user}/>}</AuthGate>);
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
 </script>
 </body>
 </html>

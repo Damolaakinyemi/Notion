@@ -5,9 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Notion — Inventory Intelligence Platform</title>
   <style>
-    /* ========================================
-       CSS CUSTOM PROPERTIES / THEME
-    ======================================== */
     :root {
       --bg-primary: #0a0a0f;
       --bg-secondary: #12121a;
@@ -33,886 +30,166 @@
       --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --max-width: 1200px;
     }
-
-    /* ========================================
-       RESET & BASE
-    ======================================== */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-    html {
-      scroll-behavior: smooth;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    body {
-      font-family: var(--font);
-      background: var(--bg-primary);
-      color: var(--text-secondary);
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg-primary); color: var(--text-secondary); line-height: 1.7; overflow-x: hidden; }
     a { text-decoration: none; color: inherit; }
     ul { list-style: none; }
-    img { max-width: 100%; display: block; }
-
-    .container {
-      width: 100%;
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ========================================
-       SCROLL ANIMATIONS
-    ======================================== */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(40px);
-      transition: opacity 0.7s var(--transition), transform 0.7s var(--transition);
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .container { width: 100%; max-width: var(--max-width); margin: 0 auto; padding: 0 24px; }
+    .fade-in { opacity: 0; transform: translateY(40px); transition: opacity 0.7s var(--transition), transform 0.7s var(--transition); }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
     .fade-in-delay-1 { transition-delay: 0.1s; }
     .fade-in-delay-2 { transition-delay: 0.2s; }
     .fade-in-delay-3 { transition-delay: 0.3s; }
     .fade-in-delay-4 { transition-delay: 0.4s; }
-
-    /* ========================================
-       NAVIGATION
-    ======================================== */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      padding: 16px 0;
-      transition: var(--transition);
-      background: transparent;
-    }
-    .navbar.scrolled {
-      background: rgba(10, 10, 15, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 0;
-    }
-    .navbar .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 1.35rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      letter-spacing: -0.5px;
-    }
-    .nav-logo .logo-icon {
-      width: 34px;
-      height: 34px;
-      background: var(--gradient);
-      border-radius: var(--radius-xs);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 0.9rem;
-      color: #fff;
-    }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 36px;
-    }
-    .nav-links a {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      transition: color var(--transition);
-      font-weight: 500;
-    }
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; padding: 16px 0; transition: var(--transition); background: transparent; }
+    .navbar.scrolled { background: rgba(10, 10, 15, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 12px 0; }
+    .navbar .container { display: flex; align-items: center; justify-content: space-between; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-size: 1.35rem; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px; }
+    .nav-logo .logo-icon { width: 34px; height: 34px; background: var(--gradient); border-radius: var(--radius-xs); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; color: #fff; }
+    .nav-links { display: flex; align-items: center; gap: 36px; }
+    .nav-links a { font-size: 0.9rem; color: var(--text-muted); transition: color var(--transition); font-weight: 500; }
     .nav-links a:hover { color: var(--text-primary); }
-    .nav-cta {
-      background: var(--gradient);
-      color: #fff !important;
-      padding: 10px 24px;
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.88rem;
-      transition: transform var(--transition), box-shadow var(--transition);
-      border: none;
-      cursor: pointer;
-    }
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--glow);
-    }
-    .mobile-toggle {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
-    .mobile-toggle span {
-      width: 24px;
-      height: 2px;
-      background: var(--text-secondary);
-      border-radius: 2px;
-      transition: var(--transition);
-    }
-
-    /* ========================================
-       HERO SECTION
-    ======================================== */
-    .hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 120px 0 80px;
-      overflow: hidden;
-    }
-    /* Animated dot grid background */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      z-index: 0;
-    }
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      inset: -50%;
-      background-image:
-        radial-gradient(circle, rgba(99,102,241,0.12) 1px, transparent 1px);
-      background-size: 40px 40px;
-      animation: gridMove 20s linear infinite;
-    }
-    @keyframes gridMove {
-      0% { transform: translate(0, 0); }
-      100% { transform: translate(40px, 40px); }
-    }
-    /* Gradient orbs */
-    .hero-orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(100px);
-      opacity: 0.4;
-      z-index: 0;
-    }
-    .hero-orb-1 {
-      width: 500px; height: 500px;
-      background: var(--accent);
-      top: -10%; left: -10%;
-      animation: float1 8s ease-in-out infinite;
-    }
-    .hero-orb-2 {
-      width: 400px; height: 400px;
-      background: var(--secondary);
-      bottom: -5%; right: -5%;
-      animation: float2 10s ease-in-out infinite;
-    }
-    @keyframes float1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(40px, 30px) scale(1.05); }
-    }
-    @keyframes float2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-30px, -40px) scale(1.08); }
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 20px;
-      background: var(--gradient-subtle);
-      border: 1px solid var(--border-hover);
-      border-radius: 50px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--accent-light);
-      margin-bottom: 28px;
-      letter-spacing: 0.3px;
-    }
-    .hero-badge .dot {
-      width: 7px; height: 7px;
-      background: #34d399;
-      border-radius: 50%;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.4); }
-    }
-    .hero h1 {
-      font-size: clamp(2.6rem, 6vw, 4.2rem);
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1.12;
-      letter-spacing: -1.5px;
-      margin-bottom: 24px;
-    }
-    .hero h1 .gradient-text {
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 560px;
-      margin: 0 auto 40px;
-      line-height: 1.75;
-    }
-    .hero-buttons {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 15px 32px;
-      background: var(--gradient);
-      color: #fff;
-      border-radius: 50px;
-      font-weight: 650;
-      font-size: 0.95rem;
-      transition: transform var(--transition), box-shadow var(--transition);
-      border: none;
-      cursor: pointer;
-    }
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 40px rgba(99,102,241,0.35);
-    }
-    .btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 15px 32px;
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 50px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: var(--transition);
-      cursor: pointer;
-    }
-    .btn-secondary:hover {
-      border-color: var(--accent);
-      color: var(--text-primary);
-      background: rgba(99,102,241,0.06);
-    }
-
-    /* ========================================
-       SECTION COMMON
-    ======================================== */
-    section {
-      padding: 100px 0;
-    }
-    .section-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--accent-light);
-      margin-bottom: 16px;
-    }
-    .section-title {
-      font-size: clamp(2rem, 4vw, 2.8rem);
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -1px;
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-    .section-subtitle {
-      font-size: 1.05rem;
-      color: var(--text-muted);
-      max-width: 560px;
-      line-height: 1.75;
-    }
-    .section-header {
-      text-align: center;
-      margin-bottom: 64px;
-    }
+    .nav-cta { background: var(--gradient); color: #fff !important; padding: 10px 24px; border-radius: 50px; font-weight: 600; font-size: 0.88rem; transition: transform var(--transition), box-shadow var(--transition); border: none; cursor: pointer; }
+    .nav-cta:hover { transform: translateY(-2px); box-shadow: var(--glow); }
+    .mobile-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .mobile-toggle span { width: 24px; height: 2px; background: var(--text-secondary); border-radius: 2px; transition: var(--transition); }
+    .hero { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 120px 0 80px; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; overflow: hidden; z-index: 0; }
+    .hero-bg::before { content: ''; position: absolute; inset: -50%; background-image: radial-gradient(circle, rgba(99,102,241,0.12) 1px, transparent 1px); background-size: 40px 40px; animation: gridMove 20s linear infinite; }
+    @keyframes gridMove { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, 40px); } }
+    .hero-orb { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.4; z-index: 0; }
+    .hero-orb-1 { width: 500px; height: 500px; background: var(--accent); top: -10%; left: -10%; animation: float1 8s ease-in-out infinite; }
+    .hero-orb-2 { width: 400px; height: 400px; background: var(--secondary); bottom: -5%; right: -5%; animation: float2 10s ease-in-out infinite; }
+    @keyframes float1 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(40px, 30px) scale(1.05); } }
+    @keyframes float2 { 0%, 100% { transform: translate(0, 0) scale(1); } 50% { transform: translate(-30px, -40px) scale(1.08); } }
+    .hero-content { position: relative; z-index: 1; text-align: center; max-width: 800px; margin: 0 auto; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; background: var(--gradient-subtle); border: 1px solid var(--border-hover); border-radius: 50px; font-size: 0.82rem; font-weight: 600; color: var(--accent-light); margin-bottom: 28px; letter-spacing: 0.3px; }
+    .hero-badge .dot { width: 7px; height: 7px; background: #34d399; border-radius: 50%; animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+    .hero h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); font-weight: 800; color: var(--text-primary); line-height: 1.12; letter-spacing: -1.5px; margin-bottom: 24px; }
+    .hero h1 .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 560px; margin: 0 auto 40px; line-height: 1.75; }
+    .hero-buttons { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .btn-primary { display: inline-flex; align-items: center; gap: 8px; padding: 15px 32px; background: var(--gradient); color: #fff; border-radius: 50px; font-weight: 650; font-size: 0.95rem; transition: transform var(--transition), box-shadow var(--transition); border: none; cursor: pointer; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 40px rgba(99,102,241,0.35); }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; padding: 15px 32px; background: transparent; color: var(--text-secondary); border: 1px solid rgba(255,255,255,0.12); border-radius: 50px; font-weight: 600; font-size: 0.95rem; transition: var(--transition); cursor: pointer; }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--text-primary); background: rgba(99,102,241,0.06); }
+    section { padding: 100px 0; }
+    .section-label { display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--accent-light); margin-bottom: 16px; }
+    .section-title { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; color: var(--text-primary); letter-spacing: -1px; line-height: 1.2; margin-bottom: 16px; }
+    .section-subtitle { font-size: 1.05rem; color: var(--text-muted); max-width: 560px; line-height: 1.75; }
+    .section-header { text-align: center; margin-bottom: 64px; }
     .section-header .section-subtitle { margin: 0 auto; }
-
-    /* ========================================
-       FEATURES SECTION
-    ======================================== */
     .features { background: var(--bg-primary); }
-    .features-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .feature-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 36px 30px;
-      transition: var(--transition);
-      position: relative;
-      overflow: hidden;
-    }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: var(--gradient);
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
-    .feature-card:hover {
-      border-color: var(--border-hover);
-      background: var(--bg-card-hover);
-      transform: translateY(-4px);
-    }
+    .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .feature-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 30px; transition: var(--transition); position: relative; overflow: hidden; }
+    .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--gradient); opacity: 0; transition: opacity var(--transition); }
+    .feature-card:hover { border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-4px); }
     .feature-card:hover::before { opacity: 1; }
-    .feature-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      background: var(--gradient-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 22px;
-    }
-    .feature-icon svg {
-      width: 24px;
-      height: 24px;
-      stroke: var(--accent-light);
-      fill: none;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .feature-card h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 10px;
-    }
-    .feature-card p {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-    /* Span the last two cards to center them */
-    .features-grid .feature-card:nth-child(4) {
-      grid-column: 1 / 2;
-    }
-    .features-grid .feature-card:nth-child(5) {
-      grid-column: 2 / 3;
-    }
-
-    /* ========================================
-       HOW IT WORKS
-    ======================================== */
-    .how-it-works {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      position: relative;
-    }
-    .steps::before {
-      content: '';
-      position: absolute;
-      top: 44px;
-      left: 18%;
-      right: 18%;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), var(--secondary), var(--accent));
-      opacity: 0.25;
-    }
-    .step {
-      text-align: center;
-      position: relative;
-    }
-    .step-number {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: #fff;
-      margin: 0 auto 24px;
-      position: relative;
-      z-index: 2;
-      box-shadow: 0 0 30px rgba(99,102,241,0.2);
-    }
-    .step h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 10px;
-    }
-    .step p {
-      font-size: 0.92rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 280px;
-      margin: 0 auto;
-    }
-
-    /* ========================================
-       BENEFITS
-    ======================================== */
+    .feature-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--gradient-subtle); display: flex; align-items: center; justify-content: center; margin-bottom: 22px; }
+    .feature-icon svg { width: 24px; height: 24px; stroke: var(--accent-light); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .feature-card h3 { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .feature-card p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; }
+    .how-it-works { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; position: relative; }
+    .steps::before { content: ''; position: absolute; top: 44px; left: 18%; right: 18%; height: 2px; background: linear-gradient(90deg, var(--accent), var(--secondary), var(--accent)); opacity: 0.25; }
+    .step { text-align: center; position: relative; }
+    .step-number { width: 56px; height: 56px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 800; color: #fff; margin: 0 auto 24px; position: relative; z-index: 2; box-shadow: 0 0 30px rgba(99,102,241,0.2); }
+    .step h3 { font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .step p { font-size: 0.92rem; color: var(--text-muted); line-height: 1.7; max-width: 280px; margin: 0 auto; }
     .benefits { background: var(--bg-primary); }
-    .benefits-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .benefit-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 40px 30px;
-      text-align: center;
-      transition: var(--transition);
-    }
-    .benefit-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-4px);
-    }
-    .benefit-metric {
-      font-size: 3rem;
-      font-weight: 800;
-      background: var(--gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 8px;
-      line-height: 1.1;
-    }
-    .benefit-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 10px;
-    }
-    .benefit-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
-
-    /* ========================================
-       LIVE DASHBOARD PREVIEW
-    ======================================== */
-    .dashboard-preview {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-    }
-    .dashboard-mock {
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    }
-    .dash-topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg-secondary);
-    }
-    .dash-topbar-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .benefit-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px 30px; text-align: center; transition: var(--transition); }
+    .benefit-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+    .benefit-metric { font-size: 3rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 8px; line-height: 1.1; }
+    .benefit-card h3 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 10px; }
+    .benefit-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+    .dashboard-preview { background: var(--bg-secondary); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .dashboard-mock { background: var(--bg-primary); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: 0 25px 60px rgba(0,0,0,0.4); }
+    .dash-topbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--border); background: var(--bg-secondary); }
+    .dash-topbar-left { display: flex; align-items: center; gap: 12px; }
     .dash-dot { width: 11px; height: 11px; border-radius: 50%; }
     .dash-dot.red { background: #ef4444; }
     .dash-dot.yellow { background: #eab308; }
     .dash-dot.green { background: #22c55e; }
-    .dash-topbar-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-left: 8px;
-    }
-    .dash-topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .dash-tab {
-      padding: 5px 14px;
-      font-size: 0.78rem;
-      border-radius: 6px;
-      font-weight: 600;
-      color: var(--text-dim);
-      border: 1px solid transparent;
-    }
-    .dash-tab.active {
-      background: var(--gradient-subtle);
-      border-color: var(--border-hover);
-      color: var(--accent-light);
-    }
+    .dash-topbar-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-left: 8px; }
+    .dash-topbar-right { display: flex; align-items: center; gap: 8px; }
+    .dash-tab { padding: 5px 14px; font-size: 0.78rem; border-radius: 6px; font-weight: 600; color: var(--text-dim); border: 1px solid transparent; }
+    .dash-tab.active { background: var(--gradient-subtle); border-color: var(--border-hover); color: var(--accent-light); }
     .dash-body { padding: 24px; }
-    .dash-stats {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .dash-stat-card {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 20px;
-    }
-    .dash-stat-label {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-weight: 600;
-      margin-bottom: 6px;
-    }
-    .dash-stat-value {
-      font-size: 1.7rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1.2;
-    }
-    .dash-stat-change {
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-top: 4px;
-    }
-    .dash-stat-change.up { color: #34d399; }
-    .dash-stat-change.down { color: #f87171; }
-
-    .dash-content {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 16px;
-    }
-    .dash-chart-area {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 20px;
-    }
-    .dash-chart-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      margin-bottom: 20px;
-    }
-    /* CSS-only bar chart */
-    .bar-chart {
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
-      height: 140px;
-    }
-    .bar-group {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      height: 100%;
-      justify-content: flex-end;
-    }
-    .bar {
-      width: 100%;
-      border-radius: 4px 4px 0 0;
-      background: var(--gradient);
-      opacity: 0.85;
-      transition: opacity var(--transition);
-      min-width: 20px;
-    }
-    .bar:hover { opacity: 1; }
-    .bar-label {
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      font-weight: 600;
-    }
-    .dash-activity {
-      background: var(--bg-secondary);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 20px;
-    }
-    .activity-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    .activity-item:last-child { border-bottom: none; }
-    .activity-dot {
-      width: 9px; height: 9px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .activity-dot.complete { background: #34d399; }
-    .activity-dot.progress { background: #fbbf24; }
-    .activity-dot.missing { background: #f87171; }
-    .activity-text {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-    .activity-text strong {
-      color: var(--text-secondary);
-      font-weight: 600;
-    }
-    .activity-time {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      margin-left: auto;
-      white-space: nowrap;
-    }
-
-    /* ========================================
-       TESTIMONIALS
-    ======================================== */
+    .dash-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .dash-stat-card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; }
+    .dash-stat-label { font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-bottom: 6px; }
+    .dash-stat-value { font-size: 1.7rem; font-weight: 800; color: var(--text-primary); line-height: 1.2; }
+    .dash-stat-change { font-size: 0.75rem; font-weight: 600; margin-top: 4px; }
+    .dash-stat-change.green { color: #34d399; }
+    .dash-stat-change.amber { color: #fbbf24; }
+    .dash-stat-change.rose { color: #f87171; }
+    .dash-content { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+    .dash-chart-area { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; }
+    .dash-chart-title { font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 20px; }
+    .bar-chart { display: flex; flex-direction: column; gap: 12px; }
+    .bar-row { display: flex; align-items: center; gap: 12px; }
+    .bar-vendor { font-size: 0.75rem; color: var(--text-muted); width: 100px; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { flex: 1; background: rgba(255,255,255,0.06); border-radius: 4px; height: 22px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; background: var(--gradient); opacity: 0.85; transition: width 1s ease; }
+    .bar-count { font-size: 0.72rem; color: var(--text-dim); font-weight: 600; width: 30px; }
+    .vendor-progress { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; }
+    .vp-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+    .vp-item:last-child { border-bottom: none; }
+    .vp-info { flex: 1; min-width: 0; }
+    .vp-name { font-size: 0.82rem; font-weight: 600; color: var(--text-secondary); }
+    .vp-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; margin-top: 6px; }
+    .vp-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+    .vp-bar-fill.high { background: #34d399; }
+    .vp-bar-fill.mid { background: #fbbf24; }
+    .vp-bar-fill.low { background: #f87171; }
+    .vp-pct { font-size: 0.75rem; font-weight: 700; min-width: 40px; text-align: right; }
+    .vp-pct.high { color: #34d399; }
+    .vp-pct.mid { color: #fbbf24; }
+    .vp-pct.low { color: #f87171; }
     .testimonials { background: var(--bg-primary); }
-    .testimonials-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .testimonial-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 36px 30px;
-      transition: var(--transition);
-    }
-    .testimonial-card:hover {
-      border-color: var(--border-hover);
-      transform: translateY(-3px);
-    }
-    .testimonial-stars {
-      display: flex;
-      gap: 3px;
-      margin-bottom: 18px;
-    }
-    .testimonial-stars svg {
-      width: 18px; height: 18px;
-      fill: #fbbf24;
-    }
-    .testimonial-card blockquote {
-      font-size: 0.94rem;
-      color: var(--text-muted);
-      line-height: 1.75;
-      margin-bottom: 24px;
-      font-style: normal;
-    }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .testimonial-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: var(--gradient);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: #fff;
-      flex-shrink: 0;
-    }
-    .testimonial-name {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .testimonial-role {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-    }
-
-    /* ========================================
-       FINAL CTA
-    ======================================== */
-    .final-cta {
-      position: relative;
-      overflow: hidden;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-    }
-    .final-cta .cta-bg {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(ellipse at center, rgba(99,102,241,0.14), transparent 70%);
-    }
-    .final-cta .container {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-    }
-    .final-cta .section-title {
-      margin-bottom: 16px;
-    }
-    .final-cta .section-subtitle {
-      margin: 0 auto 40px;
-    }
-    .cta-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-
-    /* ========================================
-       FOOTER
-    ======================================== */
-    .footer {
-      background: var(--bg-primary);
-      border-top: 1px solid var(--border);
-      padding: 60px 0 30px;
-    }
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 48px;
-      margin-bottom: 48px;
-    }
-    .footer-brand p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-top: 14px;
-      line-height: 1.7;
-      max-width: 280px;
-    }
-    .footer-socials {
-      display: flex;
-      gap: 12px;
-      margin-top: 20px;
-    }
-    .footer-socials a {
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: var(--transition);
-    }
-    .footer-socials a:hover {
-      border-color: var(--accent);
-      background: var(--gradient-subtle);
-    }
-    .footer-socials svg {
-      width: 16px; height: 16px;
-      fill: var(--text-muted);
-    }
-    .footer-col h4 {
-      font-size: 0.82rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--text-secondary);
-      margin-bottom: 20px;
-    }
-    .footer-col a {
-      display: block;
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      padding: 5px 0;
-      transition: color var(--transition);
-    }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .testimonial-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 36px 30px; transition: var(--transition); }
+    .testimonial-card:hover { border-color: var(--border-hover); transform: translateY(-3px); }
+    .testimonial-stars { display: flex; gap: 3px; margin-bottom: 18px; }
+    .testimonial-stars svg { width: 18px; height: 18px; fill: #fbbf24; }
+    .testimonial-card blockquote { font-size: 0.94rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 24px; font-style: normal; }
+    .testimonial-author { display: flex; align-items: center; gap: 14px; }
+    .testimonial-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--gradient); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; color: #fff; flex-shrink: 0; }
+    .testimonial-name { font-size: 0.92rem; font-weight: 700; color: var(--text-primary); }
+    .testimonial-role { font-size: 0.78rem; color: var(--text-dim); }
+    .final-cta { position: relative; overflow: hidden; background: var(--bg-secondary); border-top: 1px solid var(--border); }
+    .final-cta .cta-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(99,102,241,0.14), transparent 70%); }
+    .final-cta .container { position: relative; z-index: 1; text-align: center; }
+    .final-cta .section-title { margin-bottom: 16px; }
+    .final-cta .section-subtitle { margin: 0 auto 40px; }
+    .cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .footer { background: var(--bg-primary); border-top: 1px solid var(--border); padding: 60px 0 30px; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }
+    .footer-brand p { font-size: 0.88rem; color: var(--text-muted); margin-top: 14px; line-height: 1.7; max-width: 280px; }
+    .footer-socials { display: flex; gap: 12px; margin-top: 20px; }
+    .footer-socials a { width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; transition: var(--transition); }
+    .footer-socials a:hover { border-color: var(--accent); background: var(--gradient-subtle); }
+    .footer-socials svg { width: 16px; height: 16px; fill: var(--text-muted); }
+    .footer-col h4 { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 20px; }
+    .footer-col a { display: block; font-size: 0.88rem; color: var(--text-muted); padding: 5px 0; transition: color var(--transition); }
     .footer-col a:hover { color: var(--text-primary); }
-    .footer-bottom {
-      border-top: 1px solid var(--border);
-      padding-top: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .footer-bottom p {
-      font-size: 0.82rem;
-      color: var(--text-dim);
-    }
-
-    /* ========================================
-       RESPONSIVE
-    ======================================== */
+    .footer-bottom { border-top: 1px solid var(--border); padding-top: 24px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 0.82rem; color: var(--text-dim); }
     @media (max-width: 1024px) {
       .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .features-grid .feature-card:nth-child(4),
-      .features-grid .feature-card:nth-child(5) { grid-column: auto; }
       .dash-stats { grid-template-columns: repeat(2, 1fr); }
       .dash-content { grid-template-columns: 1fr; }
       .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-grid { grid-template-columns: repeat(2, 1fr); }
     }
-
     @media (max-width: 768px) {
       section { padding: 70px 0; }
       .nav-links { display: none; }
       .mobile-toggle { display: flex; }
-      .nav-links.open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: rgba(10,10,15,0.97);
-        backdrop-filter: blur(20px);
-        padding: 24px;
-        gap: 16px;
-        border-bottom: 1px solid var(--border);
-      }
+      .nav-links.open { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: rgba(10,10,15,0.97); backdrop-filter: blur(20px); padding: 24px; gap: 16px; border-bottom: 1px solid var(--border); }
       .hero { padding: 100px 0 60px; }
       .features-grid { grid-template-columns: 1fr; }
       .steps { grid-template-columns: 1fr; gap: 40px; }
@@ -922,25 +199,18 @@
       .testimonials-grid { grid-template-columns: 1fr; }
       .footer-grid { grid-template-columns: 1fr; gap: 32px; }
     }
-
     @media (max-width: 480px) {
       .hero h1 { font-size: 2rem; }
       .hero-buttons { flex-direction: column; width: 100%; }
-      .hero-buttons .btn-primary,
-      .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
+      .hero-buttons .btn-primary, .hero-buttons .btn-secondary { width: 100%; justify-content: center; }
       .dash-stats { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-
-  <!-- ======== NAVIGATION ======== -->
   <nav class="navbar" aria-label="Main navigation">
     <div class="container">
-      <a href="#" class="nav-logo" aria-label="Notion home">
-        <div class="logo-icon">N</div>
-        Notion
-      </a>
+      <a href="#" class="nav-logo" aria-label="Notion home"><div class="logo-icon">N</div>Notion</a>
       <div class="nav-links" id="navLinks">
         <a href="#features">Features</a>
         <a href="#how-it-works">How It Works</a>
@@ -948,159 +218,116 @@
         <a href="#testimonials">Testimonials</a>
         <a href="#cta" class="nav-cta">Get Started</a>
       </div>
-      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu" aria-expanded="false">
-        <span></span><span></span><span></span>
-      </button>
+      <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu" aria-expanded="false"><span></span><span></span><span></span></button>
     </div>
   </nav>
 
-  <!-- ======== HERO ======== -->
   <section class="hero" id="hero">
-    <div class="hero-bg">
-      <div class="hero-orb hero-orb-1"></div>
-      <div class="hero-orb hero-orb-2"></div>
-    </div>
+    <div class="hero-bg"><div class="hero-orb hero-orb-1"></div><div class="hero-orb hero-orb-2"></div></div>
     <div class="container">
       <div class="hero-content fade-in">
-        <div class="hero-badge">
-          <span class="dot"></span>
-          Now in Public Beta
-        </div>
-        <h1>
-          Inventory Management<br />
-          <span class="gradient-text">Made Effortless</span>
-        </h1>
-        <p>Track every item, monitor live updates, and communicate with vendors — all from one beautifully simple platform built for modern teams.</p>
+        <div class="hero-badge"><span class="dot"></span>Now in Public Beta</div>
+        <h1>Inventory Tracking<br /><span class="gradient-text">Made Effortless</span></h1>
+        <p>Upload your item lists, auto-sort by status, track vendor requests, and compose emails &mdash; all from one beautifully simple platform built for modern teams.</p>
         <div class="hero-buttons">
-          <a href="#cta" class="btn-primary">
-            Start Managing Smarter
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-          </a>
-          <a href="#dashboard" class="btn-secondary">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            View Dashboard
-          </a>
+          <a href="#cta" class="btn-primary">Start Managing Smarter <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
+          <a href="#dashboard" class="btn-secondary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg> View Dashboard</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======== FEATURES ======== -->
   <section class="features" id="features">
     <div class="container">
       <div class="section-header fade-in">
         <div class="section-label">&#9672; Features</div>
         <h2 class="section-title">Everything You Need in One Place</h2>
-        <p class="section-subtitle">Powerful tools designed to simplify inventory management, vendor communication, and operational workflows.</p>
+        <p class="section-subtitle">Powerful tools designed to simplify item tracking, vendor communication, and operational workflows.</p>
       </div>
       <div class="features-grid">
-
-        <!-- Feature 1 -->
         <div class="feature-card fade-in fade-in-delay-1">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
-          </div>
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
           <h3>Dashboard Analytics</h3>
-          <p>Get a comprehensive overview of your inventory health, order status, and key performance metrics at a glance.</p>
+          <p>Get a comprehensive overview with metric cards, donut charts, vendor progress bars, and status breakdowns &mdash; all updating in real time as you work.</p>
         </div>
-
-        <!-- Feature 2 -->
         <div class="feature-card fade-in fade-in-delay-2">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg>
-          </div>
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12 2v4"/><path d="M12 18v4"/><path d="m4.93 4.93 2.83 2.83"/><path d="m16.24 16.24 2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="m4.93 19.07 2.83-2.83"/><path d="m16.24 7.76 2.83-2.83"/></svg></div>
           <h3>Live Dashboard</h3>
-          <p>Real-time updates that keep your team in sync. See item movements, status changes, and order progress as they happen.</p>
+          <p>A dedicated real-time view with auto-updating stats, animated charts, and a live activity feed &mdash; so your team always has the latest picture.</p>
         </div>
-
-        <!-- Feature 3 -->
         <div class="feature-card fade-in fade-in-delay-3">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          </div>
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
           <h3>Smart Search</h3>
-          <p>Find any item instantly with intelligent search and filters. Search by name, SKU, status, vendor, or any custom field.</p>
+          <p>Find any item instantly with intelligent search across code, name, vendor, owner, and notes &mdash; plus filters for status, priority, and vendor.</p>
         </div>
-
-        <!-- Feature 4 -->
         <div class="feature-card fade-in fade-in-delay-3">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-          </div>
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
           <h3>Status Tracking</h3>
-          <p>Mark items as complete, missing, or in progress. Visual indicators make it easy to understand operational state instantly.</p>
+          <p>Organize items as Completed, In Progress, Needs Attention, or Not Finished. Color-coded boards and badges make operational state crystal clear.</p>
         </div>
-
-        <!-- Feature 5 -->
         <div class="feature-card fade-in fade-in-delay-4">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          </div>
+          <div class="feature-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
           <h3>Email Compose</h3>
-          <p>Communicate with vendors directly from the platform. Draft, send, and track emails without switching between tools.</p>
+          <p>Draft request, follow-up, or clarification emails to vendors using built-in templates. Queue, preview, copy, or open directly in Outlook.</p>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ======== HOW IT WORKS ======== -->
   <section class="how-it-works" id="how-it-works">
     <div class="container">
       <div class="section-header fade-in">
         <div class="section-label">&#9672; How It Works</div>
         <h2 class="section-title">Up and Running in Minutes</h2>
-        <p class="section-subtitle">Three simple steps to transform how your team manages inventory and vendor relationships.</p>
+        <p class="section-subtitle">Three simple steps to transform how your team manages inventory and vendor requests.</p>
       </div>
       <div class="steps">
         <div class="step fade-in fade-in-delay-1">
           <div class="step-number">1</div>
-          <h3>Connect Your Data</h3>
-          <p>Import your inventory from spreadsheets, CSVs, or integrate directly with your existing tools and systems.</p>
+          <h3>Upload Your Data</h3>
+          <p>Import your inventory from Excel spreadsheets, CSVs, or text files. The system auto-detects columns and sorts items by status.</p>
         </div>
         <div class="step fade-in fade-in-delay-2">
           <div class="step-number">2</div>
           <h3>Track &amp; Manage</h3>
-          <p>Monitor item status in real time, search instantly, and keep your entire team aligned with live dashboard updates.</p>
+          <p>Monitor item status in real time, search instantly, filter by vendor or priority, and keep your entire team aligned with live dashboard updates.</p>
         </div>
         <div class="step fade-in fade-in-delay-3">
           <div class="step-number">3</div>
           <h3>Communicate &amp; Deliver</h3>
-          <p>Reach out to vendors via built-in email, resolve missing items, and close the loop — all without leaving the platform.</p>
+          <p>Reach out to vendors via built-in email templates, resolve outstanding items, and close the loop &mdash; all without leaving the platform.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======== BENEFITS ======== -->
   <section class="benefits" id="benefits">
     <div class="container">
       <div class="section-header fade-in">
         <div class="section-label">&#9672; Why Notion</div>
-        <h2 class="section-title">Results That Speak for Themselves</h2>
-        <p class="section-subtitle">Teams using Notion see measurable improvements across every dimension of their operations.</p>
+        <h2 class="section-title">Built for Teams That Move Fast</h2>
+        <p class="section-subtitle">Notion replaces scattered spreadsheets and email threads with one focused platform.</p>
       </div>
       <div class="benefits-grid">
         <div class="benefit-card fade-in fade-in-delay-1">
-          <div class="benefit-metric">70%</div>
-          <h3>Time Saved</h3>
-          <p>Eliminate manual tracking, redundant data entry, and endless email threads. Focus on what actually moves the needle.</p>
+          <div class="benefit-metric">Hours</div>
+          <h3>Saved Every Week</h3>
+          <p>Eliminate manual tracking, redundant data entry, and endless email threads. Smart auto-detection does the sorting for you.</p>
         </div>
         <div class="benefit-card fade-in fade-in-delay-2">
-          <div class="benefit-metric">3x</div>
-          <h3>Better Organization</h3>
-          <p>Centralized data, clear status indicators, and powerful search mean nothing falls through the cracks again.</p>
+          <div class="benefit-metric">1</div>
+          <h3>Platform for Everything</h3>
+          <p>Centralized data, clear status indicators, vendor directory, bulk email, and powerful search &mdash; nothing falls through the cracks.</p>
         </div>
         <div class="benefit-card fade-in fade-in-delay-3">
-          <div class="benefit-metric">100%</div>
+          <div class="benefit-metric">Real-Time</div>
           <h3>Team Alignment</h3>
-          <p>Real-time dashboards and shared workflows keep every team member on the same page, from warehouse to boardroom.</p>
+          <p>Live dashboards, auto-save, and shared workflows keep every team member on the same page, from warehouse to boardroom.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ======== LIVE DASHBOARD PREVIEW ======== -->
   <section class="dashboard-preview" id="dashboard">
     <div class="container">
       <div class="section-header fade-in">
@@ -1109,86 +336,73 @@
         <p class="section-subtitle">A real-time dashboard that gives you full visibility into every aspect of your inventory operations.</p>
       </div>
       <div class="dashboard-mock fade-in">
-        <!-- Top bar -->
         <div class="dash-topbar">
           <div class="dash-topbar-left">
-            <span class="dash-dot red"></span>
-            <span class="dash-dot yellow"></span>
-            <span class="dash-dot green"></span>
-            <span class="dash-topbar-title">Notion — Live Dashboard</span>
+            <span class="dash-dot red"></span><span class="dash-dot yellow"></span><span class="dash-dot green"></span>
+            <span class="dash-topbar-title">Notion &mdash; Live Dashboard</span>
           </div>
           <div class="dash-topbar-right">
-            <span class="dash-tab active">Overview</span>
-            <span class="dash-tab">Items</span>
+            <span class="dash-tab active">Dashboard</span>
+            <span class="dash-tab">Live View</span>
             <span class="dash-tab">Vendors</span>
-            <span class="dash-tab">Reports</span>
+            <span class="dash-tab">Queue</span>
           </div>
         </div>
-        <!-- Body -->
         <div class="dash-body">
-          <!-- Stats Row -->
           <div class="dash-stats">
             <div class="dash-stat-card">
               <div class="dash-stat-label">Total Items</div>
-              <div class="dash-stat-value">12,847</div>
-              <div class="dash-stat-change up">&#9650; 12% from last month</div>
+              <div class="dash-stat-value">2,847</div>
+              <div class="dash-stat-change green">Coverage: 68%</div>
             </div>
             <div class="dash-stat-card">
-              <div class="dash-stat-label">Active Orders</div>
-              <div class="dash-stat-value">284</div>
-              <div class="dash-stat-change up">&#9650; 8% from last month</div>
+              <div class="dash-stat-label">Completed</div>
+              <div class="dash-stat-value">1,936</div>
+              <div class="dash-stat-change green">&#9650; 12 this week</div>
             </div>
             <div class="dash-stat-card">
-              <div class="dash-stat-label">Completion Rate</div>
-              <div class="dash-stat-value">94.2%</div>
-              <div class="dash-stat-change up">&#9650; 3.1% from last month</div>
+              <div class="dash-stat-label">In Progress</div>
+              <div class="dash-stat-value">384</div>
+              <div class="dash-stat-change amber">Requests sent</div>
             </div>
             <div class="dash-stat-card">
-              <div class="dash-stat-label">Vendors</div>
-              <div class="dash-stat-value">67</div>
-              <div class="dash-stat-change down">&#9660; 2 inactive</div>
+              <div class="dash-stat-label">Needs Attention</div>
+              <div class="dash-stat-value">127</div>
+              <div class="dash-stat-change rose">Missing info or issues</div>
             </div>
           </div>
-          <!-- Chart + Activity -->
           <div class="dash-content">
             <div class="dash-chart-area">
-              <div class="dash-chart-title">Weekly Item Throughput</div>
+              <div class="dash-chart-title">Top Vendors by Items</div>
               <div class="bar-chart">
-                <div class="bar-group"><div class="bar" style="height:55%"></div><div class="bar-label">Mon</div></div>
-                <div class="bar-group"><div class="bar" style="height:78%"></div><div class="bar-label">Tue</div></div>
-                <div class="bar-group"><div class="bar" style="height:62%"></div><div class="bar-label">Wed</div></div>
-                <div class="bar-group"><div class="bar" style="height:90%"></div><div class="bar-label">Thu</div></div>
-                <div class="bar-group"><div class="bar" style="height:85%"></div><div class="bar-label">Fri</div></div>
-                <div class="bar-group"><div class="bar" style="height:45%"></div><div class="bar-label">Sat</div></div>
-                <div class="bar-group"><div class="bar" style="height:30%"></div><div class="bar-label">Sun</div></div>
+                <div class="bar-row"><span class="bar-vendor">Acme Supplies</span><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div><span class="bar-count">342</span></div>
+                <div class="bar-row"><span class="bar-vendor">ChemCorp</span><div class="bar-track"><div class="bar-fill" style="width:72%"></div></div><span class="bar-count">274</span></div>
+                <div class="bar-row"><span class="bar-vendor">SafetyFirst Inc</span><div class="bar-track"><div class="bar-fill" style="width:58%"></div></div><span class="bar-count">221</span></div>
+                <div class="bar-row"><span class="bar-vendor">GlobalParts</span><div class="bar-track"><div class="bar-fill" style="width:45%"></div></div><span class="bar-count">171</span></div>
+                <div class="bar-row"><span class="bar-vendor">TechVendor Co</span><div class="bar-track"><div class="bar-fill" style="width:35%"></div></div><span class="bar-count">133</span></div>
               </div>
             </div>
-            <div class="dash-activity">
-              <div class="dash-chart-title">Recent Activity</div>
-              <div class="activity-item">
-                <span class="activity-dot complete"></span>
-                <span class="activity-text"><strong>Order #4821</strong> marked as complete</span>
-                <span class="activity-time">2m ago</span>
+            <div class="vendor-progress">
+              <div class="dash-chart-title">Vendor Progress</div>
+              <div class="vp-item">
+                <div class="vp-info"><div class="vp-name">Acme Supplies</div><div class="vp-bar"><div class="vp-bar-fill high" style="width:85%"></div></div></div>
+                <span class="vp-pct high">85%</span>
               </div>
-              <div class="activity-item">
-                <span class="activity-dot progress"></span>
-                <span class="activity-text"><strong>SKU-7293</strong> status changed to in progress</span>
-                <span class="activity-time">8m ago</span>
+              <div class="vp-item">
+                <div class="vp-info"><div class="vp-name">ChemCorp</div><div class="vp-bar"><div class="vp-bar-fill mid" style="width:62%"></div></div></div>
+                <span class="vp-pct mid">62%</span>
               </div>
-              <div class="activity-item">
-                <span class="activity-dot missing"></span>
-                <span class="activity-text"><strong>3 items</strong> flagged as missing</span>
-                <span class="activity-time">15m ago</span>
+              <div class="vp-item">
+                <div class="vp-info"><div class="vp-name">SafetyFirst Inc</div><div class="vp-bar"><div class="vp-bar-fill mid" style="width:51%"></div></div></div>
+                <span class="vp-pct mid">51%</span>
               </div>
-              <div class="activity-item">
-                <span class="activity-dot complete"></span>
-                <span class="activity-text">Email sent to <strong>Acme Supplies</strong></span>
-                <span class="activity-time">22m ago</span>
+              <div class="vp-item">
+                <div class="vp-info"><div class="vp-name">GlobalParts</div><div class="vp-bar"><div class="vp-bar-fill low" style="width:30%"></div></div></div>
+                <span class="vp-pct low">30%</span>
               </div>
-              <div class="activity-item">
-                <span class="activity-dot progress"></span>
-                <span class="activity-text"><strong>Vendor report</strong> generated</span>
-                <span class="activity-time">1h ago</span>
+              <div class="vp-item">
+                <div class="vp-info"><div class="vp-name">TechVendor Co</div><div class="vp-bar"><div class="vp-bar-fill low" style="width:18%"></div></div></div>
+                <span class="vp-pct low">18%</span>
               </div>
             </div>
           </div>
@@ -1197,135 +411,74 @@
     </div>
   </section>
 
-  <!-- ======== TESTIMONIALS ======== -->
   <section class="testimonials" id="testimonials">
     <div class="container">
       <div class="section-header fade-in">
         <div class="section-label">&#9672; Testimonials</div>
         <h2 class="section-title">Loved by Operations Teams</h2>
-        <p class="section-subtitle">See how businesses are transforming their inventory workflows with Notion.</p>
+        <p class="section-subtitle">See how teams are simplifying their inventory tracking with Notion.</p>
       </div>
       <div class="testimonials-grid">
-
         <div class="testimonial-card fade-in fade-in-delay-1">
-          <div class="testimonial-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <blockquote>&ldquo;Notion completely changed how we handle warehouse operations. We cut our tracking time by 60% and haven&rsquo;t lost a single shipment since we started using it.&rdquo;</blockquote>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">SR</div>
-            <div>
-              <div class="testimonial-name">Sarah Reynolds</div>
-              <div class="testimonial-role">Operations Manager, LogiCore Inc.</div>
-            </div>
-          </div>
+          <div class="testimonial-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <blockquote>&ldquo;The auto-detection when uploading Excel files is incredible. It correctly sorted 90% of our items on the first import. Saved us a full day of manual sorting.&rdquo;</blockquote>
+          <div class="testimonial-author"><div class="testimonial-avatar">SR</div><div><div class="testimonial-name">Sarah Reynolds</div><div class="testimonial-role">Operations Manager, LogiCore Inc.</div></div></div>
         </div>
-
         <div class="testimonial-card fade-in fade-in-delay-2">
-          <div class="testimonial-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <blockquote>&ldquo;The live dashboard is a game-changer. Our team finally has real-time visibility into what&rsquo;s happening across three warehouses. Vendor communication is seamless now.&rdquo;</blockquote>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">MK</div>
-            <div>
-              <div class="testimonial-name">Marcus Kim</div>
-              <div class="testimonial-role">Supply Chain Director, FreshRoute</div>
-            </div>
-          </div>
+          <div class="testimonial-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <blockquote>&ldquo;The live dashboard and vendor progress tracking finally gave our team a shared view of what&rsquo;s done and what still needs follow-up. No more status update meetings.&rdquo;</blockquote>
+          <div class="testimonial-author"><div class="testimonial-avatar">MK</div><div><div class="testimonial-name">Marcus Kim</div><div class="testimonial-role">Supply Chain Director, FreshRoute</div></div></div>
         </div>
-
         <div class="testimonial-card fade-in fade-in-delay-3">
-          <div class="testimonial-stars">
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-          </div>
-          <blockquote>&ldquo;We replaced four different tools with Notion. The smart search alone saves our team hours each week. It feels like it was designed specifically for logistics teams.&rdquo;</blockquote>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">LP</div>
-            <div>
-              <div class="testimonial-name">Laura Patel</div>
-              <div class="testimonial-role">Head of Logistics, UrbanStock</div>
-            </div>
-          </div>
+          <div class="testimonial-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <blockquote>&ldquo;The bulk email feature is a game changer. We send SDS requests to 40+ vendors and the built-in templates mean consistent, professional communication every time.&rdquo;</blockquote>
+          <div class="testimonial-author"><div class="testimonial-avatar">LP</div><div><div class="testimonial-name">Laura Patel</div><div class="testimonial-role">Head of Logistics, UrbanStock</div></div></div>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- ======== FINAL CTA ======== -->
   <section class="final-cta" id="cta">
     <div class="cta-bg"></div>
     <div class="container">
       <div class="section-label fade-in">&#9672; Get Started</div>
       <h2 class="section-title fade-in">Ready to Take Control of<br/>Your Inventory?</h2>
-      <p class="section-subtitle fade-in">Join thousands of teams already using Notion to streamline their operations. Start for free — no credit card required.</p>
+      <p class="section-subtitle fade-in">Join teams already simplifying their inventory workflows. Start for free &mdash; no credit card required.</p>
       <div class="cta-buttons fade-in">
-        <a href="#" class="btn-primary">
-          Start Managing Smarter
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-        </a>
+        <a href="#" class="btn-primary">Start Managing Smarter <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></a>
         <a href="#" class="btn-secondary">Talk to Sales</a>
       </div>
     </div>
   </section>
 
-  <!-- ======== FOOTER ======== -->
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <div class="nav-logo">
-            <div class="logo-icon">N</div>
-            Notion
-          </div>
-          <p>The modern inventory intelligence platform built for teams that move fast and ship faster.</p>
+          <div class="nav-logo"><div class="logo-icon">N</div>Notion</div>
+          <p>The modern inventory tracking platform built for teams that move fast and ship faster.</p>
           <div class="footer-socials">
-            <a href="#" aria-label="Twitter">
-              <svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 12 7.47v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
-            </a>
-            <a href="#" aria-label="GitHub">
-              <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-            </a>
-            <a href="#" aria-label="LinkedIn">
-              <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-            </a>
+            <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 12 7.47v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+            <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg></a>
+            <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
           </div>
         </div>
         <div class="footer-col">
           <h4>Product</h4>
           <a href="#">Features</a>
           <a href="#">Dashboard</a>
-          <a href="#">Integrations</a>
           <a href="#">Pricing</a>
-          <a href="#">Changelog</a>
         </div>
         <div class="footer-col">
           <h4>Company</h4>
           <a href="#">About</a>
           <a href="#">Blog</a>
-          <a href="#">Careers</a>
-          <a href="#">Press</a>
           <a href="#">Contact</a>
         </div>
         <div class="footer-col">
           <h4>Resources</h4>
           <a href="#">Documentation</a>
-          <a href="#">API Reference</a>
           <a href="#">Support</a>
-          <a href="#">Status</a>
           <a href="#">Privacy Policy</a>
         </div>
       </div>
@@ -1336,47 +489,22 @@
     </div>
   </footer>
 
-  <!-- ======== JAVASCRIPT ======== -->
   <script>
-    /* ---- Scroll-triggered fade-in animations via Intersection Observer ---- */
     document.addEventListener('DOMContentLoaded', function () {
       var observer = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
+        entries.forEach(function (entry) { if (entry.isIntersecting) entry.target.classList.add('visible'); });
       }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-      document.querySelectorAll('.fade-in').forEach(function (el) {
-        observer.observe(el);
-      });
-
-      /* ---- Navbar scroll effect ---- */
+      document.querySelectorAll('.fade-in').forEach(function (el) { observer.observe(el); });
       var navbar = document.querySelector('.navbar');
-      window.addEventListener('scroll', function () {
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
-        }
-      });
-
-      /* ---- Mobile toggle ---- */
+      window.addEventListener('scroll', function () { navbar.classList.toggle('scrolled', window.scrollY > 50); });
       var toggle = document.getElementById('mobileToggle');
       var navLinks = document.getElementById('navLinks');
       toggle.addEventListener('click', function () {
         navLinks.classList.toggle('open');
-        var expanded = toggle.getAttribute('aria-expanded') === 'true';
-        toggle.setAttribute('aria-expanded', String(!expanded));
+        toggle.setAttribute('aria-expanded', String(navLinks.classList.contains('open')));
       });
-
-      /* Close mobile nav when a link is clicked */
       navLinks.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () {
-          navLinks.classList.remove('open');
-          toggle.setAttribute('aria-expanded', 'false');
-        });
+        link.addEventListener('click', function () { navLinks.classList.remove('open'); toggle.setAttribute('aria-expanded', 'false'); });
       });
     });
   </script>
