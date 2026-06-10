@@ -314,6 +314,78 @@ function Tour({open,onClose}){
 /* Relative time helper */
 function relTime(d){const s=Math.floor((Date.now()-d.getTime())/1000);if(s<60)return"Just now";if(s<3600)return Math.floor(s/60)+"m ago";if(s<86400)return Math.floor(s/3600)+"h ago";return Math.floor(s/86400)+"d ago"}
 /* MAIN APP */
+/* Chart components (defined outside App to prevent re-mount flicker) */
+const DonutChart=({met})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||met.total===0)return;
+      cRef.current=new Chart(ref.current,{type:'doughnut',data:{
+        labels:['Completed','In Progress','Needs Attention','Not Finished'],
+        datasets:[{data:[met.done,met.ip,met.na,met.nf],
+          backgroundColor:['#22c55e','#f59e0b','#ef4444','#6366f1'],
+          borderWidth:0,borderRadius:4}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
+          plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:12,font:{size:12}}},
+            tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#cbd5e1',borderColor:'#334155',borderWidth:1}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[met]);
+    return React.createElement('canvas',{ref:ref});
+  };
+const BarChart=({items:allItems})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||!allItems.length)return;
+      const counts={};allItems.forEach(it=>{const v=it.vendor||'Unknown';counts[v]=(counts[v]||0)+1});
+      const sd=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
+      cRef.current=new Chart(ref.current,{type:'bar',data:{
+        labels:sd.map(s=>s[0].length>15?s[0].slice(0,14)+'\u2026':s[0]),
+        datasets:[{data:sd.map(s=>s[1]),backgroundColor:'#6366f1',borderRadius:6,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#cbd5e1'}},
+          scales:{x:{grid:{color:'#e2e8f0'},ticks:{color:'#64748b',font:{size:11}}},
+            y:{grid:{display:false},ticks:{color:'#334155',font:{size:12}}}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[allItems]);
+    return React.createElement('canvas',{ref:ref});
+  };
+const LiveDonutChart=({met})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||met.total===0)return;
+      cRef.current=new Chart(ref.current,{type:'doughnut',data:{
+        labels:['Completed','In Progress','Needs Attention','Not Finished'],
+        datasets:[{data:[met.done,met.ip,met.na,met.nf],
+          backgroundColor:['#4ade80','#fbbf24','#fb7185','#a5b4fc'],
+          borderWidth:0,borderRadius:4}]},
+        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
+          plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:12,font:{size:11}}},
+            tooltip:{backgroundColor:'#0f172a',titleColor:'#f1f5f9',bodyColor:'#cbd5e1',borderColor:'#334155',borderWidth:1}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[met]);
+    return React.createElement('canvas',{ref:ref});
+  };
+const LiveBarChart=({items:allItems})=>{
+    const ref=useRef(null);const cRef=useRef(null);
+    useEffect(()=>{
+      if(cRef.current)cRef.current.destroy();
+      if(!ref.current||!allItems.length)return;
+      const counts={};allItems.forEach(it=>{const v=it.vendor||'Unknown';counts[v]=(counts[v]||0)+1});
+      const sd=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
+      cRef.current=new Chart(ref.current,{type:'bar',data:{
+        labels:sd.map(s=>s[0].length>15?s[0].slice(0,14)+'\u2026':s[0]),
+        datasets:[{data:sd.map(s=>s[1]),backgroundColor:'#818cf8',borderRadius:6,borderSkipped:false}]},
+        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+          plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#f1f5f9',bodyColor:'#cbd5e1'}},
+          scales:{x:{grid:{color:'rgba(51,65,85,.5)'},ticks:{color:'#94a3b8',font:{size:11}}},
+            y:{grid:{display:false},ticks:{color:'#e2e8f0',font:{size:12}}}}}});
+      return()=>{if(cRef.current)cRef.current.destroy()};
+    },[allItems]);
+    return React.createElement('canvas',{ref:ref});
+  };
+
 function App(){
   const saved=loadSaved();
   const[items,setItems]=useState(saved?.items||[]);
@@ -339,8 +411,7 @@ function App(){
   const actIdRef=useRef(2);
   const addActivity=(type,text)=>{setActivityLog(p=>[{id:actIdRef.current++,type,text,time:new Date()},...p].slice(0,50))};
   /* Live Clock */
-  const[liveClock,setLiveClock]=useState(new Date());
-  useEffect(()=>{const t=setInterval(()=>setLiveClock(new Date()),1000);return()=>clearInterval(t)},[]);
+  /* liveClock removed - no longer needed */
 
   useEffect(()=>{const hk=e=>{if(e.key==="Escape"&&qaOpen)setQaOpen(false)};document.addEventListener("keydown",hk);return()=>document.removeEventListener("keydown",hk)},[qaOpen]);
   useEffect(()=>{if(skipHistoryRef.current){skipHistoryRef.current=false;return;}if(items.length===0&&historyRef.current.length===0)return;const last=historyRef.current[historyRef.current.length-1];if(last&&JSON.stringify(last)===JSON.stringify(items))return;historyRef.current.push(JSON.parse(JSON.stringify(items)));if(historyRef.current.length>31)historyRef.current.splice(0,historyRef.current.length-31);futureRef.current=[];setHistLen(historyRef.current.length);setFutLen(0);},[items]);
@@ -437,83 +508,13 @@ function App(){
   const Btn=({children,onClick,variant,size,disabled,cls})=>{const base="font-medium rounded-xl transition-colors "+(size==="sm"?"px-3 py-1.5 text-xs":"px-4 py-2 text-sm");const v=variant==="outline"?"border border-slate-200 bg-white text-slate-700 hover:bg-slate-50":variant==="ghost"?"text-slate-600 hover:bg-slate-100":variant==="danger"?"bg-red-600 text-white hover:bg-red-700":"bg-slate-900 text-white hover:bg-slate-800";return <button onClick={onClick} disabled={disabled} className={base+" "+v+" "+(disabled?"opacity-50 cursor-not-allowed":"")+" "+(cls||"")}>{children}</button>};
 
   /* Chart components */
-  const DonutChart=({met})=>{
-    const ref=useRef(null);const cRef=useRef(null);
-    useEffect(()=>{
-      if(cRef.current)cRef.current.destroy();
-      if(!ref.current||met.total===0)return;
-      cRef.current=new Chart(ref.current,{type:'doughnut',data:{
-        labels:['Completed','In Progress','Needs Attention','Not Finished'],
-        datasets:[{data:[met.done,met.ip,met.na,met.nf],
-          backgroundColor:['#22c55e','#f59e0b','#ef4444','#6366f1'],
-          borderWidth:0,borderRadius:4}]},
-        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
-          plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:12,font:{size:12}}},
-            tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#cbd5e1',borderColor:'#334155',borderWidth:1}}}});
-      return()=>{if(cRef.current)cRef.current.destroy()};
-    },[met]);
-    return React.createElement('canvas',{ref:ref});
-  };
-  const BarChart=({items:allItems})=>{
-    const ref=useRef(null);const cRef=useRef(null);
-    useEffect(()=>{
-      if(cRef.current)cRef.current.destroy();
-      if(!ref.current||!allItems.length)return;
-      const counts={};allItems.forEach(it=>{const v=it.vendor||'Unknown';counts[v]=(counts[v]||0)+1});
-      const sd=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
-      cRef.current=new Chart(ref.current,{type:'bar',data:{
-        labels:sd.map(s=>s[0].length>15?s[0].slice(0,14)+'\u2026':s[0]),
-        datasets:[{data:sd.map(s=>s[1]),backgroundColor:'#6366f1',borderRadius:6,borderSkipped:false}]},
-        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-          plugins:{legend:{display:false},tooltip:{backgroundColor:'#1e293b',titleColor:'#f1f5f9',bodyColor:'#cbd5e1'}},
-          scales:{x:{grid:{color:'#e2e8f0'},ticks:{color:'#64748b',font:{size:11}}},
-            y:{grid:{display:false},ticks:{color:'#334155',font:{size:12}}}}}});
-      return()=>{if(cRef.current)cRef.current.destroy()};
-    },[allItems]);
-    return React.createElement('canvas',{ref:ref});
-  };
   /* Live Dashboard Chart Components (dark theme) */
-  const LiveDonutChart=({met})=>{
-    const ref=useRef(null);const cRef=useRef(null);
-    useEffect(()=>{
-      if(cRef.current)cRef.current.destroy();
-      if(!ref.current||met.total===0)return;
-      cRef.current=new Chart(ref.current,{type:'doughnut',data:{
-        labels:['Completed','In Progress','Needs Attention','Not Finished'],
-        datasets:[{data:[met.done,met.ip,met.na,met.nf],
-          backgroundColor:['#4ade80','#fbbf24','#fb7185','#a5b4fc'],
-          borderWidth:0,borderRadius:4}]},
-        options:{responsive:true,maintainAspectRatio:false,cutout:'72%',
-          plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:12,font:{size:11}}},
-            tooltip:{backgroundColor:'#0f172a',titleColor:'#f1f5f9',bodyColor:'#cbd5e1',borderColor:'#334155',borderWidth:1}}}});
-      return()=>{if(cRef.current)cRef.current.destroy()};
-    },[met]);
-    return React.createElement('canvas',{ref:ref});
-  };
-  const LiveBarChart=({items:allItems})=>{
-    const ref=useRef(null);const cRef=useRef(null);
-    useEffect(()=>{
-      if(cRef.current)cRef.current.destroy();
-      if(!ref.current||!allItems.length)return;
-      const counts={};allItems.forEach(it=>{const v=it.vendor||'Unknown';counts[v]=(counts[v]||0)+1});
-      const sd=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,7);
-      cRef.current=new Chart(ref.current,{type:'bar',data:{
-        labels:sd.map(s=>s[0].length>15?s[0].slice(0,14)+'\u2026':s[0]),
-        datasets:[{data:sd.map(s=>s[1]),backgroundColor:'#818cf8',borderRadius:6,borderSkipped:false}]},
-        options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
-          plugins:{legend:{display:false},tooltip:{backgroundColor:'#0f172a',titleColor:'#f1f5f9',bodyColor:'#cbd5e1'}},
-          scales:{x:{grid:{color:'rgba(51,65,85,.5)'},ticks:{color:'#94a3b8',font:{size:11}}},
-            y:{grid:{display:false},ticks:{color:'#e2e8f0',font:{size:12}}}}}});
-      return()=>{if(cRef.current)cRef.current.destroy()};
-    },[allItems]);
-    return React.createElement('canvas',{ref:ref});
-  };
   /* Vendor stats for live dashboard */
   const liveVendorStats=useMemo(()=>{var vg={};items.forEach(function(it){var v=it.vendor||"Unknown";if(!vg[v])vg[v]={total:0,done:0,ip:0,na:0,nf:0,email:it.vendorEmail||""};vg[v].total++;if(it.status==="Completed")vg[v].done++;else if(it.status==="In Progress")vg[v].ip++;else if(it.status==="Needs Attention")vg[v].na++;else vg[v].nf++;if(!vg[v].email&&it.vendorEmail)vg[v].email=it.vendorEmail});return Object.entries(vg).sort((a,b)=>b[1].total-a[1].total).slice(0,10)},[items]);
 
   const isEmpty=items.length===0&&queue.length===0;
-  const TAB_LIST=["dashboard","liveDashboard","vendors","queue","emailQueue","attention","templates"];
-  const TAB_LABELS={dashboard:"\uD83D\uDCCA Dashboard",liveDashboard:"\uD83D\uDCE1 Live Dashboard",vendors:"\uD83D\uDCC7 Vendors",queue:"Team Queue",emailQueue:"Email Queue Preview",attention:"Needs Attention",templates:"Templates"};
+  const TAB_LIST=["dashboard","vendors","queue","emailQueue","attention","templates"];
+  const TAB_LABELS={dashboard:"\uD83D\uDCCA Dashboard",vendors:"\uD83D\uDCC7 Vendors",queue:"Team Queue",emailQueue:"Email Queue Preview",attention:"Needs Attention",templates:"Templates"};
   return(
     <div className={"min-h-screen p-4 md:p-8 "+(dark?"dark bg-[#0f172a]":"bg-gradient-to-br from-slate-50 via-white to-blue-50")}>
       <Tour open={tourOpen} onClose={()=>setTourOpen(false)}/>
@@ -624,75 +625,53 @@ function App(){
             </div>
 
             {/* ===== DASHBOARD TAB ===== */}
-            {tab==="dashboard"&&(<div className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-5 text-center"><div className="text-4xl font-bold text-emerald-700">{met.pct}%</div><div className="text-sm text-emerald-600 mt-1">Overall Coverage</div><div className="text-xs text-emerald-500 mt-2">{met.done} of {met.total} items complete</div></div>
-                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-center"><div className="text-4xl font-bold text-amber-700">{met.ip}</div><div className="text-sm text-amber-600 mt-1">In Progress</div><div className="text-xs text-amber-500 mt-2">Requests sent, awaiting response</div></div>
-                <div className="rounded-2xl border border-rose-200 bg-rose-50 p-5 text-center"><div className="text-4xl font-bold text-rose-700">{met.na}</div><div className="text-sm text-rose-600 mt-1">Needs Attention</div><div className="text-xs text-rose-500 mt-2">Missing info or vendor issues</div></div>
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 text-center"><div className="text-4xl font-bold text-slate-700">{met.nf}</div><div className="text-sm text-slate-600 mt-1">Not Started</div><div className="text-xs text-slate-500 mt-2">Ready to request</div></div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6"><h3 className="text-lg font-semibold text-slate-900 mb-4">&#129383; Status Breakdown</h3><div style={{height:'280px'}}><DonutChart met={met}/></div></div>
-                <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-6"><h3 className="text-lg font-semibold text-slate-900 mb-4">&#127970; Top Vendors by Items</h3><div style={{height:'280px'}}><BarChart items={items}/></div></div>
-              </div>
-              <div className="rounded-2xl border border-slate-200 bg-white shadow-sm p-5">
-                <h3 className="text-lg font-semibold text-slate-900 mb-4">&#128202; Vendor Progress</h3>
-                {items.length===0?<p className="text-slate-500 italic">No items yet.</p>:
-                <div className="space-y-3">{(function(){var vg={};items.forEach(function(it){var v=it.vendor||"Unknown";if(!vg[v])vg[v]={total:0,done:0,ip:0,na:0,nf:0};vg[v].total++;if(it.status==="Completed")vg[v].done++;else if(it.status==="In Progress")vg[v].ip++;else if(it.status==="Needs Attention")vg[v].na++;else vg[v].nf++});return Object.keys(vg).sort().map(function(v){var d=vg[v];var pct=d.total?Math.round(d.done/d.total*100):0;return React.createElement("div",{key:v,className:"rounded-xl border border-slate-100 p-3 hover:bg-slate-50 transition-colors"},React.createElement("div",{className:"flex items-center justify-between mb-2"},React.createElement("div",null,React.createElement("span",{className:"font-medium text-slate-900"},v),React.createElement("span",{className:"ml-2 text-xs text-slate-400"},d.total+" items")),React.createElement("span",{className:"text-sm font-semibold "+(pct===100?"text-emerald-600":pct>50?"text-amber-600":"text-rose-600")},pct+"%")),React.createElement("div",{className:"w-full bg-slate-100 rounded-full h-2.5 mb-2"},React.createElement("div",{className:"h-2.5 rounded-full transition-all "+(pct===100?"bg-emerald-500":pct>50?"bg-amber-400":"bg-rose-400"),style:{width:Math.max(pct,2)+"%"}})),React.createElement("div",{className:"flex gap-2 flex-wrap"},d.done>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700"},"\u2705 "+d.done+" done"),d.ip>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700"},"\u23F3 "+d.ip+" in progress"),d.na>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-rose-100 text-rose-700"},"\u26A0\uFE0F "+d.na+" attention"),d.nf>0&&React.createElement("span",{className:"text-xs px-2 py-0.5 rounded-full bg-slate-100 text-slate-600"},"\u23F8 "+d.nf+" not started")))})})()}</div>}
-              </div>
-            </div>)}
-
-            {/* ===== LIVE DASHBOARD TAB ===== */}
-            {tab==="liveDashboard"&&(
-              <div className="ld-wrap">
-                <div className="ld-hdr">
-                  <div className="ld-title">&#128225; Live Dashboard <span className="ld-live"><span className="ld-dot"></span>LIVE</span></div>
-                  <div className="ld-clock">{liveClock.toLocaleString()}</div>
-                </div>
-                <div className="ld-stats">
-                  <div className="ld-stat indigo"><div className="ld-stat-val">{met.total}</div><div className="ld-stat-lbl">Total Items</div><div className="ld-stat-sub">{uniqueVendors.length} vendors tracked</div></div>
-                  <div className="ld-stat green"><div className="ld-stat-val">{met.done}</div><div className="ld-stat-lbl">Completed</div><div className="ld-stat-sub">{met.pct}% coverage</div></div>
-                  <div className="ld-stat amber"><div className="ld-stat-val">{met.ip}</div><div className="ld-stat-lbl">In Progress</div><div className="ld-stat-sub">Requests sent</div></div>
-                  <div className="ld-stat rose"><div className="ld-stat-val">{met.na}</div><div className="ld-stat-lbl">Needs Attention</div><div className="ld-stat-sub">{overdueCount} overdue</div></div>
-                </div>
-                <div className="ld-grid">
-                  <div className="ld-card"><div className="ld-card-title">&#127849; Status Breakdown</div><div style={{height:'260px'}}><LiveDonutChart met={met}/></div></div>
-                  <div className="ld-card"><div className="ld-card-title">&#127970; Top Vendors</div><div style={{height:'260px'}}><LiveBarChart items={items}/></div></div>
-                </div>
-                <div className="ld-grid">
-                  <div className="ld-card">
-                    <div className="ld-card-title">&#9889; Activity Feed</div>
-                    <div className="ld-feed">
-                      {activityLog.map(a=>(
-                        <div key={a.id} className="ld-feed-item">
-                          <span className={"ld-feed-dot "+a.type}></span>
-                          <div style={{flex:1}}><div className="ld-feed-text">{a.text}</div><div className="ld-feed-time">{relTime(a.time)}</div></div>
-                        </div>
-                      ))}
-                      {activityLog.length===0&&<div className="ld-feed-text" style={{textAlign:'center',padding:'24px 0',color:'#64748b'}}>No activity yet.</div>}
-                    </div>
+            {tab==="dashboard"&&(
+              <div className="space-y-6">
+                <div className="ld-wrap">
+                  <div className="ld-stats">
+                    <div className="ld-stat indigo"><div className="ld-stat-val">{met.total}</div><div className="ld-stat-lbl">Total Items</div><div className="ld-stat-sub">{uniqueVendors.length} vendors tracked</div></div>
+                    <div className="ld-stat green"><div className="ld-stat-val">{met.done}</div><div className="ld-stat-lbl">Completed</div><div className="ld-stat-sub">{met.pct}% coverage</div></div>
+                    <div className="ld-stat amber"><div className="ld-stat-val">{met.ip}</div><div className="ld-stat-lbl">In Progress</div><div className="ld-stat-sub">Requests sent</div></div>
+                    <div className="ld-stat rose"><div className="ld-stat-val">{met.na}</div><div className="ld-stat-lbl">Needs Attention</div><div className="ld-stat-sub">{overdueCount} overdue</div></div>
                   </div>
-                  <div className="ld-card">
-                    <div className="ld-card-title">&#128202; Vendor Progress</div>
-                    <div className="ld-vp ld-feed">
-                      {liveVendorStats.map(([vn,d])=>{const pct=d.total?Math.round(d.done/d.total*100):0;const cls=pct>=70?'high':pct>=40?'mid':'low';return(
-                        <div key={vn} className="ld-vp-item">
-                          <div className="ld-vp-top"><span className="ld-vp-name">{vn}</span><span className={"ld-vp-pct "+cls}>{pct}%</span></div>
-                          <div className="ld-vp-bar"><div className={"ld-vp-fill "+cls} style={{width:Math.max(pct,2)+"%"}}></div></div>
-                          <div className="ld-vp-tags">
-                            {d.done>0&&<span className="ld-vp-tag g">&#10003; {d.done}</span>}
-                            {d.ip>0&&<span className="ld-vp-tag a">&#9203; {d.ip}</span>}
-                            {d.na>0&&<span className="ld-vp-tag r">&#9888; {d.na}</span>}
-                            {d.nf>0&&<span className="ld-vp-tag s">&#9208; {d.nf}</span>}
+                  <div className="ld-grid">
+                    <div className="ld-card"><div className="ld-card-title">&#129383; Status Breakdown</div><div style={{height:'280px'}}><LiveDonutChart met={met}/></div></div>
+                    <div className="ld-card"><div className="ld-card-title">&#127970; Top Vendors</div><div style={{height:'280px'}}><LiveBarChart items={items}/></div></div>
+                  </div>
+                  <div className="ld-grid">
+                    <div className="ld-card">
+                      <div className="ld-card-title">&#9889; Activity Feed</div>
+                      <div className="ld-feed">
+                        {activityLog.map(a=>(
+                          <div key={a.id} className="ld-feed-item">
+                            <span className={"ld-feed-dot "+a.type}></span>
+                            <div style={{flex:1}}><div className="ld-feed-text">{a.text}</div><div className="ld-feed-time">{relTime(a.time)}</div></div>
                           </div>
-                        </div>
-                      )})}
-                      {liveVendorStats.length===0&&<div className="ld-feed-text" style={{textAlign:'center',padding:'24px 0',color:'#64748b'}}>No vendor data yet.</div>}
+                        ))}
+                        {activityLog.length===0&&<div className="ld-feed-text" style={{textAlign:'center',padding:'24px 0',color:'#64748b'}}>No activity yet.</div>}
+                      </div>
+                    </div>
+                    <div className="ld-card">
+                      <div className="ld-card-title">&#128202; Vendor Progress</div>
+                      <div className="ld-vp ld-feed">
+                        {liveVendorStats.map(([vn,d])=>{const pct=d.total?Math.round(d.done/d.total*100):0;const cls=pct>=70?'high':pct>=40?'mid':'low';return(
+                          <div key={vn} className="ld-vp-item">
+                            <div className="ld-vp-top"><span className="ld-vp-name">{vn}</span><span className={"ld-vp-pct "+cls}>{pct}%</span></div>
+                            <div className="ld-vp-bar"><div className={"ld-vp-fill "+cls} style={{width:Math.max(pct,2)+"%"}}></div></div>
+                            <div className="ld-vp-tags">
+                              {d.done>0&&<span className="ld-vp-tag g">&#10003; {d.done}</span>}
+                              {d.ip>0&&<span className="ld-vp-tag a">&#9203; {d.ip}</span>}
+                              {d.na>0&&<span className="ld-vp-tag r">&#9888; {d.na}</span>}
+                              {d.nf>0&&<span className="ld-vp-tag s">&#9208; {d.nf}</span>}
+                            </div>
+                          </div>
+                        )})}
+                        {liveVendorStats.length===0&&<div className="ld-feed-text" style={{textAlign:'center',padding:'24px 0',color:'#64748b'}}>No vendor data yet.</div>}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              </div>)}
 
             {/* ===== VENDORS TAB ===== */}
             {tab==="vendors"&&(<div className="space-y-6">
