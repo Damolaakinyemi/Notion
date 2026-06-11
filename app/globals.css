@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --surface: #fbfbfa;
+  --surface-hover: #f1f1ef;
+  --foreground: #37352f;
+  --muted: #787774;
+  --border: #ebebea;
+  --border-strong: #e0e0de;
+  --accent: #2383e2;
+  --accent-soft: #e7f1fb;
+  --radius: 0.5rem;
+
+  --status-todo-bg: #f1f1ef;
+  --status-todo-fg: #5f5e5b;
+  --status-progress-bg: #fbecdd;
+  --status-progress-fg: #9a5e1f;
+  --status-done-bg: #dbeddb;
+  --status-done-fg: #2a6b3a;
+}
+
+.dark {
+  --background: #191919;
+  --surface: #202020;
+  --surface-hover: #2a2a2a;
+  --foreground: #e9e9e7;
+  --muted: #979794;
+  --border: #2c2c2c;
+  --border-strong: #383838;
+  --accent: #529cca;
+  --accent-soft: #1c3a4f;
+
+  --status-todo-bg: #2c2c2c;
+  --status-todo-fg: #b3b3b0;
+  --status-progress-bg: #3a2e1f;
+  --status-progress-fg: #d7a96a;
+  --status-done-bg: #1f3a26;
+  --status-done-fg: #7dc98e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --font-sans: var(--font-sans);
+  --radius-DEFAULT: var(--radius);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fade-in-up 0.22s ease-out both;
+}
